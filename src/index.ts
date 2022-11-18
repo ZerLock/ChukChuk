@@ -1,11 +1,10 @@
 import * as ex from "excalibur";
 import { Player } from "./class/player";
+import { PlayerUpper } from "./class/playerUpper";
 import { Ground } from "./class/ground";
-import { Game } from "./class/game";
+import { MainGame } from "./class/game";
+import { UpperScene } from "./scene/UpperScene";
 
-const player = new Player();
-ex.Physics.useRealisticPhysics();
-ex.Physics.acc = ex.vec(0, 500);
-Game.start();
-Game.add(player);
-Game.add(Ground);
+MainGame.start();
+MainGame.add("upper", new UpperScene());
+MainGame.goToScene("upper");
