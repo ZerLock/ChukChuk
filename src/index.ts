@@ -1,8 +1,8 @@
-import { Engine } from 'excalibur';
+import * as ex from "excalibur";
 
-const game = new Engine({
-    width: 600,
-    height: 400,
+const game = new ex.Engine({
+  width: 600,
+  height: 400,
 });
 
 game.start();
