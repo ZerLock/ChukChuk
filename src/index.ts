@@ -6,5 +6,3 @@ import { MainGame } from "./class/game";
 import { UpperScene } from "./scene/UpperScene";
 
 MainGame.start();
-MainGame.add("upper", new UpperScene());
-MainGame.goToScene("upper");

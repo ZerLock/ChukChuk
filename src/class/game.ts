@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { UpperScene } from "../scene/UpperScene";
+import { SideScene } from "../scene/SideScene";
 
 class Game extends ex.Engine {
   public static drawWidth = 800;
@@ -7,16 +8,18 @@ class Game extends ex.Engine {
   public static halfDrawWidth = Game.drawWidth / 2;
   public static halfDrawHeight = Game.drawHeight / 2;
   public sceneBool = false;
-  public UpperScene = new UpperScene();
+  public UpperScene = new UpperScene(this.halfDrawWidth, this.halfDrawHeight);
+  public SideScene = new SideScene(this.halfDrawWidth, this.halfDrawHeight);
 
   constructor() {
     super({
       width: Game.drawWidth,
       height: Game.drawHeight,
       displayMode: ex.DisplayMode.FillScreen,
-      backgroundColor: ex.Color.Black,
+      backgroundColor: ex.Color.Blue,
     });
     this.add("upper", this.UpperScene);
+    this.add("side", this.SideScene);
   }
   onInitialize(engine: ex.Engine) {
     engine.input.keyboard.on("press", (evt) =>
@@ -24,7 +27,8 @@ class Game extends ex.Engine {
     );
   }
   public handlePressedEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
-    if (evt.key === ex.Input.Keys.Space) {
+    if (evt.key === ex.Input.Keys.Enter) {
+      console.log("space");
       if (this.sceneBool) {
         this.goToScene("upper");
         this.sceneBool = false;

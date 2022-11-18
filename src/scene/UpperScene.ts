@@ -1,22 +1,23 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
-import { Ground } from "../class/ground";
 
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;
 
-  constructor() {
+  constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
-    this.player = new PlayerUpper();
+    this.player = new PlayerUpper(10, 10);
     this.add(this.player);
-    this.add(new Ground());
   }
 
   public onInitialize(engine: ex.Engine) {
+    ex.Physics.useArcadePhysics();
+    ex.Physics.acc = ex.vec(0, 0);
     engine.input.keyboard.on("hold", (evt) => this.handleKeyEvent(engine, evt));
     engine.input.keyboard.on("release", (evt) =>
       this.handleReleaseEvent(engine, evt)
     );
+    this.player.vel.setTo(0, 0);
   }
 
   public handleReleaseEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
