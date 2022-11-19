@@ -3,6 +3,35 @@
         "id": 1,
         "order": 0,
         "name": "Mr Citrouille",
-        "text": "Hey you ! Yes you !"
+        "text": "Hey you ! Yes you ! Put me on your head.",
+        "trigger": 14
+    },
+    {
+        "id": 2,
+        "order": 1,
+        "name": "Mr Citrouille",
+        "text": "Do you see the the hill in front on you ? Go and climb it.",
+        "trigger": 22
+    },
+    {
+        "id": 3,
+        "order": 2,
+        "name": "Mr Citrouille",
+        "text": "Good job ! Now continue forward.",
+        "trigger": 68
+    },
+    {
+        "id": 4,
+        "order": 3,
+        "name": "Mr Citrouille",
+        "text": "Oh no step-sis you are stuck ! try to avoid the tree. Click on \"Enter\"",
+        "trigger": 112
+    },
+    {
+        "id": 5,
+        "order": 4,
+        "name": "Mr Citrouille",
+        "text": "GG !! You completed the tutorial ! Now go explore this mysterios world !",
+        "trigger": 130
     }
 ]
