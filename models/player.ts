@@ -1,8 +1,11 @@
 export interface Position {
-    x: string;
-    y: string;
+    x: number;
+    y: number;
+    z: number;
 }
 
-export interface Player {
-    position: Postition
-}
+export type Anim = {
+    run: 'RUN',
+    idle: 'IDLE',
+    jump: 'JUMP',
+};

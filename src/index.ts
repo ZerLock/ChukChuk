@@ -1,8 +1,6 @@
-import * as ex from "excalibur";
-import { Player } from "./class/player";
-import { PlayerUpper } from "./class/playerUpper";
-import { Ground } from "./class/ground";
 import { MainGame } from "./class/game";
-import { UpperScene } from "./scene/UpperScene";
+import { loader } from "./resources";
 
-MainGame.start();
+loader.playButtonText = "Start ChukChuk";
+
+MainGame.start(loader);
