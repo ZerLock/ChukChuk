@@ -8,7 +8,7 @@ export class Global {
     player_speed: 500,
     player_acceleration: 30,
     jump_ratio: 2.4,
-    current_layer: 0,
+    current_layer: 2,
     player_pos: {
       x: 0,
       y: 0,

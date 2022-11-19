@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
 import { UpperPlayerSpriteSheetStopped, blocksSpriteSheet } from "../resources";
-import map from "../maps/map1.json";
+import map from "../maps/level1-3.json";
 import { getSpritesToDisplay, Views } from "../utils/map";
 import { getSprite } from "../utils/sprite";
 import { Global } from "../class/global";

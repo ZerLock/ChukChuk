@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import { getSpritesToDisplay, Views } from "../utils/map";
 import { Global } from "../class/global";
 import { Player } from "../class/player";
-import map from '../maps/map1.json';
+import map from '../maps/level1-3.json';
 import _dico from '../../resources/script/dictionnaire.json';
 import type { Sprites } from '../../models';
 import { blocksSpriteSheet } from "../resources";

@@ -1,5 +1,4 @@
 import * as ex from "excalibur";
-import { Global } from '../class/global';
 import { UpperScene } from "../scene/UpperScene";
 import { SideScene } from "../scene/SideScene";
 import { Views } from "../utils/map";
