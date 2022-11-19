@@ -10,9 +10,15 @@ export class Global {
     jump_ratio: 2.4,
     current_layer: 2,
     player_pos: {
-      x: 0,
-      y: 10,
+      x: 7,
+      y: 8,
       z: 0,
     },
+    hasPumpkin: false,
+    pumpkin_pos: {
+      x: 20,
+      y: 11,
+      z: 0,
+    }
   };
 }

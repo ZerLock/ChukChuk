@@ -7,6 +7,7 @@ const Images: { [key: string]: ex.ImageSource } = {
   playerSideIdle: new ex.ImageSource("./chuckidle.png"),
   playerUpper: new ex.ImageSource("./upper.png"),
   blocks: new ex.ImageSource("./blocks.png"),
+  pumpkin: new ex.ImageSource("./pumpkin.png"),
 };
 
 const SidePlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
@@ -37,6 +38,16 @@ const blocksSpriteSheet = ex.SpriteSheet.fromImageSource({
     spriteHeight: 16,
     spriteWidth: 16,
   },
+});
+
+const pumpkinAmin = ex.SpriteSheet.fromImageSource({
+  image: Images.pumpkin,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteWidth: Global.globalConfig.sprite_size,
+    spriteHeight: Global.globalConfig.sprite_size,
+  }
 });
 
 const UpperPlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
@@ -72,5 +83,6 @@ export {
   SidePlayerIdle,
   UpperPlayerSpriteSheet,
   blocksSpriteSheet,
+  pumpkinAmin,
   UpperPlayerSpriteSheetStopped,
 };

@@ -6,15 +6,22 @@ import map from '../maps/level1-3.json';
 import _dico from '../../resources/script/dictionnaire.json';
 import type { Sprites } from '../../models';
 import { blocksSpriteSheet } from "../resources";
+import { Pumpkin } from "../class/pumpkin";
 
 const dico = _dico as Sprites;
 
 export class SideScene extends ex.Scene {
     private player: Player;
+    private pumpkin: Pumpkin;
 
     constructor(halfDrawWidth: number, halfDrawHeigh: number) {
         super();
         this.player = new Player(10, 10);
+        this.pumpkin = new Pumpkin(
+            Global.globalConfig.pumpkin_pos.x * Global.globalConfig.sprite_size,
+            Global.globalConfig.pumpkin_pos.y * Global.globalConfig.sprite_size + 10,
+        );
+        this.add(this.pumpkin);
         this.add(this.player);
     }
 
@@ -48,9 +55,20 @@ export class SideScene extends ex.Scene {
     }
 
     private loadMap() {
+        const sprite_size = Global.globalConfig.sprite_size;
+
+        // Load pumpkin
+        if (!Global.globalConfig.hasPumpkin) {
+            console.log('yo');
+            this.pumpkin = new Pumpkin(
+                Global.globalConfig.pumpkin_pos.x * sprite_size,
+                Global.globalConfig.pumpkin_pos.y * sprite_size + 10,
+            );
+            this.add(this.pumpkin);
+        }
+
         // Get sprites to display
         const sprites = getSpritesToDisplay(map, Views.Side);
-        const sprite_size = Global.globalConfig.sprite_size;
 
         for (const block of sprites.playerLayer) {
             const ref = dico[block.id]; // Get block reference by ID
@@ -73,6 +91,15 @@ export class SideScene extends ex.Scene {
             sprite.width = Global.globalConfig.sprite_size; // Set size for responsive
 
             actor.graphics.use(sprite); // Add sprite on the block actor
+
+                  // kill player on aggressive sprite
+            if (ref.agressive) {
+                actor.on("precollision", (evt) => {
+                    if (evt.other === this.player) {
+                        this.player.kill();
+                    }
+                });
+            }
 
             this.add(actor); // Add the actor to the scene
         }

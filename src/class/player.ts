@@ -103,5 +103,7 @@ export class Player extends ex.Actor {
       this.vel.y = -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
       this.onGround = false;
     }
+
+    console.log(this.pos.x / Global.globalConfig.sprite_size);
   }
 }

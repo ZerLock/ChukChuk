@@ -9,4 +9,6 @@ export interface globalConfig {
     jump_ratio: number;
     current_layer: number;
     player_pos: Position;
+    hasPumpkin: boolean;
+    pumpkin_pos: Position;
 }
