@@ -3,6 +3,4 @@ import { loader } from "./resources";
 
 loader.playButtonText = "Start ChukChuk";
 
-MainGame.start(loader).then(() => {
-  MainGame.goToScene("side");
-});
+MainGame.start(loader);
