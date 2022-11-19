@@ -16,7 +16,6 @@ export class UpperScene extends ex.Scene {
   constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
     this.player = new PlayerUpper(10, 10);
-    this.printUpperMap(2);
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {
@@ -28,15 +27,35 @@ export class UpperScene extends ex.Scene {
     if (!this.player.isKilled()) {
       this.player.kill();
     }
-    this.player = new PlayerUpper(player_pos.x, (4 - Global.globalConfig.current_layer) * Global.globalConfig.sprite_size + this.deltaHeight);
+    this.player = new PlayerUpper(
+      player_pos.x,
+      (4 - Global.globalConfig.current_layer) *
+        Global.globalConfig.sprite_size +
+        this.deltaHeight
+    );
+    this.printUpperMap(0);
     this.add(this.player);
+    this.printUpperMap(2);
+    this.printUpperMap(1);
   }
 
   public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
     const sprite_size = Global.globalConfig.sprite_size;
-    console.log(Math.min(4, 3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)));
-    Global.globalConfig.current_layer = Math.min(4, 3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size));
-    Global.globalConfig.player_pos.x = Math.floor(this.player.pos.x / sprite_size);
+    console.log(
+      Math.min(
+        4,
+        3 -
+          Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)
+      )
+    );
+    Global.globalConfig.current_layer = Math.min(
+      4,
+      3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)
+    );
+    Global.globalConfig.player_pos.x = Math.floor(
+      this.player.pos.x / sprite_size
+    );
+    this.clear();
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -135,9 +154,10 @@ export class UpperScene extends ex.Scene {
         width: Global.globalConfig.sprite_size,
         height: Global.globalConfig.sprite_size,
 
-        collisionType: sprite.agressive
-          ? ex.CollisionType.Fixed
-          : ex.CollisionType.Passive,
+        collisionType:
+          sprite.agressive || layer === 1
+            ? ex.CollisionType.Fixed
+            : ex.CollisionType.Passive,
       });
       // resize sprite
       const spriteToDraw = blocksSpriteSheet.sprites[sprite.y * 32 + sprite.x];
