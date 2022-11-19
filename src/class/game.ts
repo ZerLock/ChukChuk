@@ -3,8 +3,8 @@ import { UpperScene } from "../scene/UpperScene";
 import { SideScene } from "../scene/SideScene";
 
 class Game extends ex.Engine {
-    public static drawWidth = 1600;
-    public static drawHeight = 960;
+    public static drawWidth = window.innerWidth;
+    public static drawHeight = window.innerHeight;
     public static halfDrawWidth = Game.drawWidth / 2;
     public static halfDrawHeight = Game.drawHeight / 2;
     public sceneBool = true; // true => side | false => upper
@@ -15,6 +15,10 @@ class Game extends ex.Engine {
         super({
             width: Game.drawWidth,
             height: Game.drawHeight,
+            resolution: {
+                width: Game.drawWidth,
+                height: Game.drawHeight,
+            },
             backgroundColor: ex.Color.Blue,
         });
         this.add("upper", this.UpperScene);

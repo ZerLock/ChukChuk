@@ -20,7 +20,6 @@ export class Player extends ex.Actor {
             camera: new ex.Camera(),
         });
         this.canJump = false;
-        this.playerImage = new ex.ImageSource('./chuck.png');
     }
 
     onInitialize(engine: ex.Engine) {
@@ -28,7 +27,7 @@ export class Player extends ex.Actor {
         MainGame.currentScene.camera.strategy.lockToActorAxis(this, ex.Axis.X);
 
         // Sprites & Animations & Graphics
-        const playerMoveAnim = ex.Animation.fromSpriteSheet(playerSpriteSheet, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 200);
+        const playerMoveAnim = ex.Animation.fromSpriteSheet(playerSpriteSheet, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 100);
         this.graphics.use(playerMoveAnim);
         this.graphics.add('run', playerMoveAnim);
 
@@ -64,24 +63,23 @@ export class Player extends ex.Actor {
             if (this.canJump) {
                 this.vel.y = -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
             }
-        } else if (evt.key === ex.Input.Keys.Right) {
-            // Move right
+        }
+        if (evt.key === ex.Input.Keys.Right) {
             if (this.vel.x > Global.globalConfig.player_speed) {
                 return;
             }
-            this.scale.x = 1;
             this.horizontalFlip = false;
             this.vel.x += Global.globalConfig.player_acceleration;
-        } else if (evt.key === ex.Input.Keys.Left) {
-            // Move left
+        }
+        if (evt.key === ex.Input.Keys.Left) {
             if (this.vel.x < -Global.globalConfig.player_speed) {
                 return;
             }
-            this.scale.x = -1;
             this.horizontalFlip = true;
             this.vel.x += -Global.globalConfig.player_acceleration;
         }
-        const playerGraphic = this.graphics.getGraphic('');
-        playerGraphic?.flipHorizontal = this.horizontalFlip;
+        if (this.graphics.getGraphic('run') != undefined) {
+            this.graphics.getGraphic('run')!.flipHorizontal = this.horizontalFlip;
+        }
     }
 }
