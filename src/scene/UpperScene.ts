@@ -1,8 +1,10 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
-import { UpperPlayerSpriteSheetStopped } from "../resources";
+import { UpperPlayerSpriteSheetStopped, blocksSpriteSheet } from "../resources";
 import map from "../maps/map1.json";
 import { getSpritesToDisplay, Views } from "../utils/map";
+import { getSprite } from "../utils/sprite";
+import { Global } from "../class/global";
 
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;
@@ -11,16 +13,8 @@ export class UpperScene extends ex.Scene {
   constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
     this.player = new PlayerUpper(10, 10);
+    this.printUpperMap(2);
     this.add(this.player);
-    this.add(
-      new ex.Actor({
-        pos: ex.vec(halfDrawWidth / 2, halfDrawHeigh * 2),
-        width: 800,
-        height: 600,
-        collisionType: ex.CollisionType.Fixed,
-        color: ex.Color.Green,
-      })
-    );
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -30,8 +24,6 @@ export class UpperScene extends ex.Scene {
     engine.input.keyboard.on("release", (evt) =>
       this.handleReleaseEvent(engine, evt)
     );
-    const a = getSpritesToDisplay(map, Views.Upper);
-    console.log(a);
   }
 
   public handleReleaseEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
@@ -98,5 +90,35 @@ export class UpperScene extends ex.Scene {
     } else {
       this.player.graphics.show(UpperPlayerSpriteSheetStopped.sprites[0]);
     }
+  }
+
+  public printUpperMap(layer: number) {
+    const mapper = getSpritesToDisplay(map, Views.Upper);
+    const toMap =
+      layer === 0
+        ? mapper.underPlayer
+        : layer === 1
+        ? mapper.playerLayer
+        : mapper.overPlayer;
+    toMap.forEach((element) => {
+      const sprite = getSprite(element.id, Views.Upper);
+      const block = new ex.Actor({
+        pos: ex.vec(
+          element.x * Global.globalConfig.sprite_size,
+          element.y * Global.globalConfig.sprite_size
+        ),
+        width: Global.globalConfig.sprite_size,
+        height: Global.globalConfig.sprite_size,
+        collisionType: sprite.agressive
+          ? ex.CollisionType.Fixed
+          : ex.CollisionType.Passive,
+        color: ex.Color.Green,
+      });
+      const spriteToDraw = blocksSpriteSheet.sprites[sprite.y * 32 + sprite.x];
+      spriteToDraw.height = Global.globalConfig.sprite_size;
+      spriteToDraw.width = Global.globalConfig.sprite_size;
+      block.graphics.use(spriteToDraw);
+      this.add(block);
+    });
   }
 }
