@@ -1,5 +1,4 @@
 import * as ex from "excalibur";
-import { Global } from '../class/global';
 import { UpperScene } from "../scene/UpperScene";
 import { SideScene } from "../scene/SideScene";
 import { Views } from "../utils/map";
@@ -23,6 +22,7 @@ class Game extends ex.Engine {
             },
             backgroundColor: ex.Color.Blue,
             antialiasing: false, // For pixel art
+            maxFps: 60,
         });
         this.add("upper", this.UpperScene);
         this.add("side", this.SideScene);

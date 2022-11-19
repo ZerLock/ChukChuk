@@ -1,10 +1,11 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
 import { UpperPlayerSpriteSheetStopped, blocksSpriteSheet } from "../resources";
-import map from "../maps/map1.json";
-import { getSpritesToDisplay, Views } from "../utils/map";
+import map from "../maps/level1-3.json";
+import { getSpritesToDisplay, SpriteData, Views } from "../utils/map";
 import { getSprite } from "../utils/sprite";
 import { Global } from "../class/global";
+import { SpriteSheet } from "excalibur";
 
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;
@@ -22,7 +23,6 @@ export class UpperScene extends ex.Scene {
     ex.Physics.useArcadePhysics();
     ex.Physics.acc = ex.vec(0, 0);
     const player_pos = Global.globalConfig.player_pos;
-    console.log(Global.globalConfig.current_layer, player_pos);
     player_pos.x *= Global.globalConfig.sprite_size;
     if (!this.player.isKilled()) {
       this.player.kill();
@@ -30,24 +30,19 @@ export class UpperScene extends ex.Scene {
     this.player = new PlayerUpper(
       player_pos.x,
       (4 - Global.globalConfig.current_layer) *
-        Global.globalConfig.sprite_size +
-        this.deltaHeight
+      Global.globalConfig.sprite_size +
+      this.deltaHeight
     );
-    this.printUpperMap(0);
+    const mapper = getSpritesToDisplay(map, Views.Upper);
+    this.printUpperMap(mapper["underPlayer"], "underPlayer");
     this.add(this.player);
-    this.printUpperMap(2);
-    this.printUpperMap(1);
+    this.printUpperMap(mapper["playerLayer"], "playerLayer");
+    this.printUpperMap(mapper["overPlayer"], "overPlayer");
   }
 
   public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
     const sprite_size = Global.globalConfig.sprite_size;
-    console.log(
-      Math.min(
-        4,
-        3 -
-          Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)
-      )
-    );
+
     Global.globalConfig.current_layer = Math.min(
       4,
       3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)
@@ -132,14 +127,7 @@ export class UpperScene extends ex.Scene {
     }
   }
 
-  public printUpperMap(layer: number) {
-    const mapper = getSpritesToDisplay(map, Views.Upper);
-    const toMap =
-      layer === 0
-        ? mapper.underPlayer
-        : layer === 1
-        ? mapper.playerLayer
-        : mapper.overPlayer;
+  public printUpperMap(toMap: SpriteData[], layer: string) {
     let maxX = 0;
     toMap.forEach((element) => {
       if (element.x > maxX) {
@@ -154,16 +142,20 @@ export class UpperScene extends ex.Scene {
         width: Global.globalConfig.sprite_size,
         height: Global.globalConfig.sprite_size,
 
-        collisionType:
-          sprite.agressive || layer === 1
+        collisionType: layer === "playerLayer"
             ? ex.CollisionType.Fixed
-            : ex.CollisionType.Passive,
+            : ex.CollisionType.PreventCollision,
       });
       // resize sprite
       const spriteToDraw = blocksSpriteSheet.sprites[sprite.y * 32 + sprite.x];
       spriteToDraw.height = Global.globalConfig.sprite_size;
       spriteToDraw.width = Global.globalConfig.sprite_size;
       block.graphics.use(spriteToDraw);
+      if (layer !== "underPlayer") {
+        const darkOverlay = spriteToDraw.clone();
+        darkOverlay.tint = new ex.Color(layer === "playerLayer" ? 255 : 0, 0, 0, (15 - (element.altitude ?? 0)) / 15);
+        block.graphics.add(darkOverlay);
+      }
       // kill player on aggressive sprite
       if (sprite.agressive) {
         block.on("precollision", (evt) => {
@@ -174,40 +166,30 @@ export class UpperScene extends ex.Scene {
       }
       this.add(block);
     });
-    const upperBorder = new ex.Actor({
-      pos: ex.vec(0, this.deltaHeight - Global.globalConfig.sprite_size),
-      width: maxX * Global.globalConfig.sprite_size * 2 + 25,
-      height: 1,
-      collisionType: ex.CollisionType.Fixed,
-    });
-    const lowerBorder = new ex.Actor({
-      pos: ex.vec(
-        0,
-        this.deltaHeight + Global.globalConfig.sprite_size * 4 + 15
-      ),
-      width: maxX * Global.globalConfig.sprite_size * 2 + 25,
-      height: 1,
-      collisionType: ex.CollisionType.Fixed,
-    });
-    const leftBorder = new ex.Actor({
-      pos: ex.vec(-25, this.deltaHeight),
-      width: 1,
-      height: window.innerHeight,
-      collisionType: ex.CollisionType.Fixed,
-    });
-    const rightBorder = new ex.Actor({
-      pos: ex.vec(
-        maxX * Global.globalConfig.sprite_size + 25,
-        this.deltaHeight
-      ),
-      width: 1,
-      height: window.innerHeight,
-      collisionType: ex.CollisionType.Fixed,
-    });
+    if (layer === "underPlayer") {
+      toMap.forEach((element) => {
+        if (!toMap.find((e) => e.x === element.x + 1 && e.y === element.y))
+          this.invisibleWall(element.x + 1, element.y);
+        if (!toMap.find((e) => e.x === element.x - 1 && e.y === element.y))
+          this.invisibleWall(element.x - 1, element.y);
+        if (!toMap.find((e) => e.x === element.x && e.y === element.y + 1))
+          this.invisibleWall(element.x, element.y + 1);
+        if (!toMap.find((e) => e.x === element.x && e.y === element.y - 1))
+          this.invisibleWall(element.x, element.y - 1);
+      });
+    }
+  }
 
-    this.add(upperBorder);
-    this.add(lowerBorder);
-    this.add(leftBorder);
-    this.add(rightBorder);
+  public invisibleWall(x: number, y: number) {
+    const wall = new ex.Actor({
+      pos: ex.vec(
+        x * Global.globalConfig.sprite_size,
+        (4 - y) * Global.globalConfig.sprite_size + this.deltaHeight
+      ),
+      width: Global.globalConfig.sprite_size,
+      height: Global.globalConfig.sprite_size,
+      collisionType: ex.CollisionType.Fixed,
+    });
+    this.add(wall);
   }
 }

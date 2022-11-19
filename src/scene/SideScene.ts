@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import { getSpritesToDisplay, Views } from "../utils/map";
 import { Global } from "../class/global";
 import { Player } from "../class/player";
-import map from '../maps/map1.json';
+import map from '../maps/level1-3.json';
 import _dico from '../../resources/script/dictionnaire.json';
 import type { Sprites } from '../../models';
 import { blocksSpriteSheet } from "../resources";
@@ -19,15 +19,20 @@ export class SideScene extends ex.Scene {
     }
 
     public onActivate(_context: ex.SceneActivationContext<unknown>): void {
+        // Set physics
         ex.Physics.useArcadePhysics();
         ex.Physics.acc = ex.vec(0, Global.globalConfig.gravity);
         this.player.vel.setTo(0, 0);
 
+        // Load map
         this.loadMap();
 
+        // Load player
         const player_pos = Global.globalConfig.player_pos;
+        console.log(player_pos);
         player_pos.x *= Global.globalConfig.sprite_size;
-        player_pos.y *= Global.globalConfig.sprite_size;
+        player_pos.y = (14 - player_pos.y) * Global.globalConfig.sprite_size;
+        console.log(player_pos);
         if (!this.player.isKilled()) {
             this.player.kill();
         }
@@ -50,15 +55,17 @@ export class SideScene extends ex.Scene {
         for (const block of sprites.playerLayer) {
             const ref = dico[block.id]; // Get block reference by ID
 
-            // Create new block actor
-            const actor = new ex.Actor({
+            const actorPayload: any = {
                 pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
                 width: sprite_size,
                 height: sprite_size,
-                collisionType: ref.collision
-                    ? ex.CollisionType.Fixed
-                    : ex.CollisionType.Active,
-            });
+            }
+            if (ref.collision) {
+                actorPayload.collisionType = ex.CollisionType.Fixed;
+            }
+
+            // Create new block actor
+            const actor = new ex.Actor(actorPayload);
 
             // Get sprite from spritesheet
             const sprite = blocksSpriteSheet.sprites[ref.y * 32 + ref.x];
