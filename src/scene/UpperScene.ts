@@ -19,6 +19,10 @@ export class UpperScene extends ex.Scene {
     this.printUpperMap(2);
   }
 
+  public onActivate(_context: ex.SceneActivationContext<unknown>): void {
+    ex.Physics.useArcadePhysics();
+    ex.Physics.acc = ex.vec(0, 0);
+  }
   public onInitialize(engine: ex.Engine) {
     if (!this.player.isKilled()) {
       this.player.kill();
@@ -26,8 +30,6 @@ export class UpperScene extends ex.Scene {
     this.player = new PlayerUpper(10, 10 + this.deltaHeight);
     this.add(this.player);
 
-    ex.Physics.useArcadePhysics();
-    ex.Physics.acc = ex.vec(0, 0);
     engine.input.keyboard.on("hold", (evt) => this.handleKeyEvent(engine, evt));
     engine.input.keyboard.on("release", (evt) =>
       this.handleReleaseEvent(engine, evt)
