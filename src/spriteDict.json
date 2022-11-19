@@ -263,7 +263,7 @@
     "y": 0,
     "collision": true,
     "agressive": false,
-    "upper": "328"
+    "upper": "578"
   },
   "006": {
     "x": 6,
@@ -2006,7 +2006,7 @@
     "y": 0,
     "collision": true,
     "agressive": false,
-    "upper": "328"
+    "upper": "578"
   },
   "933": {
     "x": 5,
@@ -2048,7 +2048,7 @@
     "y": 0,
     "collision": true,
     "agressive": false,
-    "upper": "328"
+    "upper": "578"
   },
   "426": {
     "x": 10,
@@ -2342,7 +2342,7 @@
     "y": 0,
     "collision": true,
     "agressive": false,
-    "upper": "328"
+    "upper": "578"
   },
   "194": {
     "x": 2,
