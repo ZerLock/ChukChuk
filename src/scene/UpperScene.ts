@@ -9,15 +9,23 @@ import { Global } from "../class/global";
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;
   public lastDirection: string = "down";
+  public deltaHeight =
+    window.innerHeight / 2 - Global.globalConfig.sprite_size * 2;
+  public blockWidth = window.innerWidth / 5;
 
   constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
     this.player = new PlayerUpper(10, 10);
     this.printUpperMap(2);
-    this.add(this.player);
   }
 
   public onInitialize(engine: ex.Engine) {
+    if (!this.player.isKilled()) {
+      this.player.kill();
+    }
+    this.player = new PlayerUpper(10, 10 + this.deltaHeight);
+    this.add(this.player);
+
     ex.Physics.useArcadePhysics();
     ex.Physics.acc = ex.vec(0, 0);
     engine.input.keyboard.on("hold", (evt) => this.handleKeyEvent(engine, evt));
@@ -100,25 +108,73 @@ export class UpperScene extends ex.Scene {
         : layer === 1
         ? mapper.playerLayer
         : mapper.overPlayer;
+    let maxX = 0;
     toMap.forEach((element) => {
+      if (element.x > maxX) {
+        maxX = element.x;
+      }
       const sprite = getSprite(element.id, Views.Upper);
       const block = new ex.Actor({
         pos: ex.vec(
           element.x * Global.globalConfig.sprite_size,
-          element.y * Global.globalConfig.sprite_size
+          element.y * Global.globalConfig.sprite_size + this.deltaHeight
         ),
         width: Global.globalConfig.sprite_size,
         height: Global.globalConfig.sprite_size,
+
         collisionType: sprite.agressive
           ? ex.CollisionType.Fixed
           : ex.CollisionType.Passive,
-        color: ex.Color.Green,
       });
+      // resize sprite
       const spriteToDraw = blocksSpriteSheet.sprites[sprite.y * 32 + sprite.x];
       spriteToDraw.height = Global.globalConfig.sprite_size;
       spriteToDraw.width = Global.globalConfig.sprite_size;
       block.graphics.use(spriteToDraw);
+      // kill player on aggressive sprite
+      if (sprite.agressive) {
+        block.on("precollision", (evt) => {
+          if (evt.other === this.player) {
+            this.player.kill();
+          }
+        });
+      }
       this.add(block);
     });
+    const upperBorder = new ex.Actor({
+      pos: ex.vec(0, this.deltaHeight - Global.globalConfig.sprite_size),
+      width: maxX * Global.globalConfig.sprite_size * 2 + 25,
+      height: 1,
+      collisionType: ex.CollisionType.Fixed,
+    });
+    const lowerBorder = new ex.Actor({
+      pos: ex.vec(
+        0,
+        this.deltaHeight + Global.globalConfig.sprite_size * 4 + 15
+      ),
+      width: maxX * Global.globalConfig.sprite_size * 2 + 25,
+      height: 1,
+      collisionType: ex.CollisionType.Fixed,
+    });
+    const leftBorder = new ex.Actor({
+      pos: ex.vec(-25, this.deltaHeight),
+      width: 1,
+      height: window.innerHeight,
+      collisionType: ex.CollisionType.Fixed,
+    });
+    const rightBorder = new ex.Actor({
+      pos: ex.vec(
+        maxX * Global.globalConfig.sprite_size + 25,
+        this.deltaHeight
+      ),
+      width: 1,
+      height: window.innerHeight,
+      collisionType: ex.CollisionType.Fixed,
+    });
+
+    this.add(upperBorder);
+    this.add(lowerBorder);
+    this.add(leftBorder);
+    this.add(rightBorder);
   }
 }
