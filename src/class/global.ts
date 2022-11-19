@@ -11,7 +11,7 @@ export class Global {
     current_layer: 2,
     player_pos: {
       x: 0,
-      y: 1,
+      y: 10,
       z: 0,
     },
   };

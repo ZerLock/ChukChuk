@@ -37,8 +37,8 @@ export class Player extends ex.Actor {
     const playerRightIdle = ex.Animation.fromSpriteSheet(SidePlayerIdle, [0, 1, 2, 3], 150);
     const playerLeftIdle = ex.Animation.fromSpriteSheet(SidePlayerIdle, [0, 1, 2, 3], 150);
     playerLeftIdle.flipHorizontal = true;
-    const playerRight = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 100);
-    const playerLeft = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 100);
+    const playerRight = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 70);
+    const playerLeft = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 70);
     playerLeft.flipHorizontal = true;
 
     // Add animations

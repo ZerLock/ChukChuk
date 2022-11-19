@@ -55,15 +55,17 @@ export class SideScene extends ex.Scene {
         for (const block of sprites.playerLayer) {
             const ref = dico[block.id]; // Get block reference by ID
 
-            // Create new block actor
-            const actor = new ex.Actor({
+            const actorPayload: any = {
                 pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
                 width: sprite_size,
                 height: sprite_size,
-                collisionType: ref.collision
-                    ? ex.CollisionType.Fixed
-                    : ex.CollisionType.Active,
-            });
+            }
+            if (ref.collision) {
+                actorPayload.collisionType = ex.CollisionType.Fixed;
+            }
+
+            // Create new block actor
+            const actor = new ex.Actor(actorPayload);
 
             // Get sprite from spritesheet
             const sprite = blocksSpriteSheet.sprites[ref.y * 32 + ref.x];
