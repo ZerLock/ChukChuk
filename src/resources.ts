@@ -19,6 +19,16 @@ const SidePlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
   },
 });
 
+const SidePlayerIdle = ex.SpriteSheet.fromImageSource({
+  image: Images.playerSideIdle,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+})
+
 const blocksSpriteSheet = ex.SpriteSheet.fromImageSource({
   image: Images.blocks,
   grid: {
@@ -59,6 +69,7 @@ export {
   Images,
   loader,
   SidePlayerSpriteSheet,
+  SidePlayerIdle,
   UpperPlayerSpriteSheet,
   blocksSpriteSheet,
   UpperPlayerSpriteSheetStopped,
