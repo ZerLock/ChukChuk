@@ -1,8 +1,12 @@
 export interface Sprite {
-    id: number;
+    x: number;
+    y: number;
+    collision: boolean;
+    agressive: boolean;
+    upper: string;
 }
 
-type Sprites = {[id: string]: Sprite}
+export type Sprites = {[id: string]: Sprite}
 
 export interface spritesheet {
     spritesheet: Array<Sprites>;
