@@ -18,20 +18,28 @@ export class SideScene extends ex.Scene {
         this.add(this.player);
     }
 
-    onInitialize(engine: ex.Engine): void {
-        // Load map
-        this.loadMap();
-    }
-
     public onActivate(_context: ex.SceneActivationContext<unknown>): void {
         ex.Physics.useArcadePhysics();
         ex.Physics.acc = ex.vec(0, Global.globalConfig.gravity);
         this.player.vel.setTo(0, 0);
+
+        this.loadMap();
+
+        const player_pos = Global.globalConfig.player_pos;
+        player_pos.x *= Global.globalConfig.sprite_size;
+        player_pos.y *= Global.globalConfig.sprite_size;
+        if (!this.player.isKilled()) {
+            this.player.kill();
+        }
+        this.player = new Player(player_pos.x, player_pos.y);
+        this.add(this.player);
     }
 
     public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
-        Global.globalConfig.player_pos.x = this.player.pos.x;
-        Global.globalConfig.player_pos.y = this.player.pos.y;
+        const sprite_size = Global.globalConfig.sprite_size;
+        Global.globalConfig.player_pos.x = Math.floor(this.player.pos.x / sprite_size);
+        Global.globalConfig.player_pos.y = 14 - Math.floor(this.player.pos.y / sprite_size);
+        this.clear();
     }
 
     private loadMap() {

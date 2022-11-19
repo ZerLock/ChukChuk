@@ -22,14 +22,24 @@ export class UpperScene extends ex.Scene {
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {
     ex.Physics.useArcadePhysics();
     ex.Physics.acc = ex.vec(0, 0);
-  }
-  public onInitialize(engine: ex.Engine) {
+    const player_pos = Global.globalConfig.player_pos;
+    console.log(Global.globalConfig.current_layer, player_pos);
+    player_pos.x *= Global.globalConfig.sprite_size;
     if (!this.player.isKilled()) {
       this.player.kill();
     }
-    this.player = new PlayerUpper(10, 10 + this.deltaHeight);
+    this.player = new PlayerUpper(player_pos.x, (4 - Global.globalConfig.current_layer) * Global.globalConfig.sprite_size + this.deltaHeight);
     this.add(this.player);
+  }
 
+  public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
+    const sprite_size = Global.globalConfig.sprite_size;
+    console.log(Math.min(4, 3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)));
+    Global.globalConfig.current_layer = Math.min(4, 3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size));
+    Global.globalConfig.player_pos.x = Math.floor(this.player.pos.x / sprite_size);
+  }
+
+  public onInitialize(engine: ex.Engine) {
     engine.input.keyboard.on("hold", (evt) => this.handleKeyEvent(engine, evt));
     engine.input.keyboard.on("release", (evt) =>
       this.handleReleaseEvent(engine, evt)
@@ -43,19 +53,22 @@ export class UpperScene extends ex.Scene {
   }
 
   public handleKeyEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
-    // Movements keys
+    // Movements key
+    const speed = Global.globalConfig.player_speed;
+    const acc = Global.globalConfig.player_acceleration;
+
     if (evt.key === ex.Input.Keys.Up) {
-      if (this.player.vel.y < -200) return;
-      this.player.vel.y += -10;
+      if (this.player.vel.y < -speed) return;
+      this.player.vel.y += -acc;
     } else if (evt.key === ex.Input.Keys.Down) {
-      if (this.player.vel.y > 200) return;
-      this.player.vel.y += 10;
+      if (this.player.vel.y > speed) return;
+      this.player.vel.y += acc;
     } else if (evt.key === ex.Input.Keys.Right) {
-      if (this.player.vel.x > 200) return;
-      this.player.vel.x += 10;
+      if (this.player.vel.x > speed) return;
+      this.player.vel.x += acc;
     } else if (evt.key === ex.Input.Keys.Left) {
-      if (this.player.vel.x < -200) return;
-      this.player.vel.x += -10;
+      if (this.player.vel.x < -speed) return;
+      this.player.vel.x += -acc;
     } else {
       this.player.vel.setTo(0, 0);
     }
@@ -67,12 +80,10 @@ export class UpperScene extends ex.Scene {
       this.lastDirection = "right";
     } else if (this.player.vel.x < 0) {
       this.player.graphics.hide();
-
       this.player.graphics.show("moveLeft");
       this.lastDirection = "left";
     } else if (this.player.vel.y > 0) {
       this.player.graphics.hide();
-
       this.player.graphics.show("moveDown");
       this.lastDirection = "down";
     } else if (this.player.vel.y < 0) {
@@ -119,7 +130,7 @@ export class UpperScene extends ex.Scene {
       const block = new ex.Actor({
         pos: ex.vec(
           element.x * Global.globalConfig.sprite_size,
-          element.y * Global.globalConfig.sprite_size + this.deltaHeight
+          (4 - element.y) * Global.globalConfig.sprite_size + this.deltaHeight
         ),
         width: Global.globalConfig.sprite_size,
         height: Global.globalConfig.sprite_size,
