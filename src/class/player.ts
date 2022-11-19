@@ -5,7 +5,6 @@ import { playerSpriteSheet } from "../resources";
 
 export class Player extends ex.Actor {
     private canJump: boolean;
-    private playerImage: ex.ImageSource;
     private horizontalFlip: boolean = false;
 
     constructor(xPosition: number, yPosition: number) {

@@ -9,5 +9,10 @@ export class Global {
         player_acceleration: 30,
         jump_ratio: 2.4,
         current_layer: 0,
+        player_pos: {
+            x: 0,
+            y: 0,
+            z: 0,
+        },
     }
 }
