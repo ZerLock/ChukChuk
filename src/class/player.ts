@@ -4,8 +4,7 @@ import { MainGame } from "./game";
 import { SidePlayerSpriteSheet } from "../resources";
 
 export class Player extends ex.Actor {
-  private canJump: boolean;
-  private horizontalFlip: boolean = false;
+  private onGround: boolean = false;
 
   constructor(xPosition: number, yPosition: number) {
     super({
@@ -16,13 +15,14 @@ export class Player extends ex.Actor {
       color: ex.Color.Red,
       collider: ex.Shape.Box(
         Global.globalConfig.sprite_size,
-        Global.globalConfig.sprite_size
+        Global.globalConfig.sprite_size,
+        ex.Vector.Half,
+        ex.vec(0, -1),
       ),
       collisionType: ex.CollisionType.Active,
       vel: ex.vec(0, 0),
       camera: new ex.Camera(),
     });
-    this.canJump = false;
   }
 
   onInitialize(engine: ex.Engine) {
@@ -30,72 +30,46 @@ export class Player extends ex.Actor {
     MainGame.currentScene.camera.strategy.lockToActorAxis(this, ex.Axis.X);
 
     // Sprites & Animations & Graphics
-    const playerMoveAnim = ex.Animation.fromSpriteSheet(
-      SidePlayerSpriteSheet,
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      100
-    );
-    this.graphics.use(playerMoveAnim);
-    this.graphics.add("run", playerMoveAnim);
+    const playerRight = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 100);
+    const playerLeft = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 100);
+    playerLeft.flipHorizontal = true;
 
-    // Collisions events
-    this.on("collisionstart", (evt) => this.handleCollisionEvent(engine, evt));
-    this.on("collisionend", (evt) => this.handleEndCollisionEvent(engine, evt));
+    // Add animations
+    this.graphics.add('runRight', playerRight);
+    this.graphics.add('runLeft', playerLeft);
+    this.graphics.use(playerRight);
 
-    // Keyboards events
-    engine.input.keyboard.on("hold", (evt) => this.handleKeyEvent(engine, evt));
-    engine.input.keyboard.on("release", (evt) =>
-      this.handleReleaseEvent(engine, evt)
-    );
+    this.on('postcollision', (evt) => this.onPostCollision(evt));
   }
 
-  private handleEndCollisionEvent(
-    engine: ex.Engine,
-    evt: ex.CollisionEndEvent<ex.Actor>
-  ) {
-    this.canJump = false;
+  onPostUpdate() {
+    if (this.vel.x < 0) {
+        this.graphics.use("runLeft");
+    } else if (this.vel.x > 0) {
+        this.graphics.use("runRight");
+    }
   }
 
-  private handleCollisionEvent(
-    engine: ex.Engine,
-    evt: ex.CollisionStartEvent<ex.Actor>
-  ) {
-    this.canJump = true;
+  onPostCollision(evt: ex.PostCollisionEvent) {
+    if (evt.side === ex.Side.Bottom) {
+      this.onGround = true;
+    } else {
+      this.onGround = false;
+    }
   }
 
-  private handleReleaseEvent(engine: ex.Engine, evt: ex.Input.KeyEvent): void {
-    if (evt.key === ex.Input.Keys.Space) {
-      // Do not stop movement when jump
-      return;
-    }
+  onPreUpdate(engine: ex.Engine, delta: number) {
+    this.vel.x = 0;
 
-    this.vel.x = 0; // Stop X-axis movements
-  }
-
-  private handleKeyEvent(engine: ex.Engine, evt: ex.Input.KeyEvent): void {
-    if (evt.key === ex.Input.Keys.Space) {
-      // Jump
-      if (this.canJump) {
-        this.vel.y =
-          -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
-      }
+    if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+      this.vel.x = Global.globalConfig.player_speed;
     }
-    if (evt.key === ex.Input.Keys.Right) {
-      if (this.vel.x > Global.globalConfig.player_speed) {
-        return;
-      }
-      this.horizontalFlip = false;
-      this.vel.x += Global.globalConfig.player_acceleration;
+    if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+      this.vel.x = -Global.globalConfig.player_speed;
     }
-    if (evt.key === ex.Input.Keys.Left) {
-      if (this.vel.x < -Global.globalConfig.player_speed) {
-        return;
-      }
-      this.horizontalFlip = true;
-      this.vel.x += -Global.globalConfig.player_acceleration;
-    }
-    if (this.graphics.getGraphic("run") != undefined) {
-      this.graphics.getGraphic("run")!.flipHorizontal = this.horizontalFlip;
+    if (engine.input.keyboard.isHeld(ex.Input.Keys.Space) && this.onGround) {
+      this.vel.y = -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
+      this.onGround = false;
     }
   }
 }
