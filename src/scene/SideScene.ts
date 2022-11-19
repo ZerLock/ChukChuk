@@ -19,15 +19,20 @@ export class SideScene extends ex.Scene {
     }
 
     public onActivate(_context: ex.SceneActivationContext<unknown>): void {
+        // Set physics
         ex.Physics.useArcadePhysics();
         ex.Physics.acc = ex.vec(0, Global.globalConfig.gravity);
         this.player.vel.setTo(0, 0);
 
+        // Load map
         this.loadMap();
 
+        // Load player
         const player_pos = Global.globalConfig.player_pos;
+        console.log(player_pos);
         player_pos.x *= Global.globalConfig.sprite_size;
-        player_pos.y *= Global.globalConfig.sprite_size;
+        player_pos.y = (14 - player_pos.y) * Global.globalConfig.sprite_size;
+        console.log(player_pos);
         if (!this.player.isKilled()) {
             this.player.kill();
         }

@@ -22,6 +22,7 @@ class Game extends ex.Engine {
             },
             backgroundColor: ex.Color.Blue,
             antialiasing: false, // For pixel art
+            maxFps: 60,
         });
         this.add("upper", this.UpperScene);
         this.add("side", this.SideScene);

@@ -4,6 +4,8 @@ import { Global } from "./class/global";
 const Images: { [key: string]: ex.ImageSource } = {
   player: new ex.ImageSource("./chuck.png"),
   playerUpper: new ex.ImageSource("./chuckUpper.png"),
+  playerJump: new ex.ImageSource("./chuckjump.png"),
+  playerSideIdle: new ex.ImageSource("./chuckidle.png"),
   blocks: new ex.ImageSource("./blocks.png"),
 };
 
@@ -16,6 +18,16 @@ const SidePlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
     spriteWidth: Global.globalConfig.sprite_size,
   },
 });
+
+const SidePlayerIdle = ex.SpriteSheet.fromImageSource({
+  image: Images.playerSideIdle,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+})
 
 const blocksSpriteSheet = ex.SpriteSheet.fromImageSource({
   image: Images.blocks,
@@ -57,6 +69,7 @@ export {
   Images,
   loader,
   SidePlayerSpriteSheet,
+  SidePlayerIdle,
   UpperPlayerSpriteSheet,
   blocksSpriteSheet,
   UpperPlayerSpriteSheetStopped,
