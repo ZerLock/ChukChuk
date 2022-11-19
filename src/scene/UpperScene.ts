@@ -76,16 +76,16 @@ export class UpperScene extends ex.Scene {
     const speed = Global.globalConfig.player_speed;
     const acc = Global.globalConfig.player_acceleration;
 
-    if (evt.key === ex.Input.Keys.Up) {
+    if (evt.key === ex.Input.Keys.Up || evt.key === ex.Input.Keys.W) {
       if (this.player.vel.y < -speed) return;
       this.player.vel.y += -acc;
-    } else if (evt.key === ex.Input.Keys.Down) {
+    } else if (evt.key === ex.Input.Keys.Down || evt.key === ex.Input.Keys.S) {
       if (this.player.vel.y > speed) return;
       this.player.vel.y += acc;
-    } else if (evt.key === ex.Input.Keys.Right) {
+    } else if (evt.key === ex.Input.Keys.Right || evt.key === ex.Input.Keys.D) {
       if (this.player.vel.x > speed) return;
       this.player.vel.x += acc;
-    } else if (evt.key === ex.Input.Keys.Left) {
+    } else if (evt.key === ex.Input.Keys.Left || evt.key === ex.Input.Keys.A) {
       if (this.player.vel.x < -speed) return;
       this.player.vel.x += -acc;
     } else {

@@ -3,7 +3,7 @@ import { Global } from "./class/global";
 
 const Images: { [key: string]: ex.ImageSource } = {
   player: new ex.ImageSource("./chuck.png"),
-  playerUpper: new ex.ImageSource("./upper.png"),
+  playerUpper: new ex.ImageSource("./chuckUpper.png"),
   blocks: new ex.ImageSource("./blocks.png"),
 };
 

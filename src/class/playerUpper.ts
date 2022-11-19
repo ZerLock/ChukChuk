@@ -10,8 +10,8 @@ export class PlayerUpper extends ex.Actor {
     super({
       x: xPosition,
       y: yPosition,
-      width: 16,
-      height: 16,
+      width: 64,
+      height: 64,
       color: ex.Color.Red,
       collisionType: ex.CollisionType.Active,
       camera: new ex.Camera(),
