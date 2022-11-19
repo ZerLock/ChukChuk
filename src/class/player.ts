@@ -14,7 +14,7 @@ export class Player extends ex.Actor {
             width: Global.globalConfig.sprite_size,
             height: Global.globalConfig.sprite_size,
             color: ex.Color.Red,
-            collider:ex.Shape.Box(Global.globalConfig.sprite_size, Global.globalConfig.sprite_size),
+            collider:ex.Shape.Circle(Global.globalConfig.sprite_size / 2),
             collisionType: ex.CollisionType.Active,
             vel: ex.vec(0, 0),
             camera: new ex.Camera(),
