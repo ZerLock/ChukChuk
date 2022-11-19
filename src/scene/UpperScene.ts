@@ -190,7 +190,6 @@ export class UpperScene extends ex.Scene {
       height: Global.globalConfig.sprite_size,
       collisionType: ex.CollisionType.Fixed,
     });
-    wall.graphics.use(blocksSpriteSheet.sprites[0]);
     this.add(wall);
   }
 }
