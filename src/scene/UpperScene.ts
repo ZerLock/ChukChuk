@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
+import { Global } from "../class/global";
 
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;
@@ -17,7 +18,6 @@ export class UpperScene extends ex.Scene {
     engine.input.keyboard.on("release", (evt) =>
       this.handleReleaseEvent(engine, evt)
     );
-    this.player.vel.setTo(0, 0);
   }
 
   public handleReleaseEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
@@ -28,7 +28,7 @@ export class UpperScene extends ex.Scene {
   public handleKeyEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
     // Movements keys
     if (evt.key === ex.Input.Keys.Up) {
-      if (this.player.vel.y < 200) return;
+      if (this.player.vel.y < -200) return;
       this.player.vel.y += -10;
     } else if (evt.key === ex.Input.Keys.Down) {
       if (this.player.vel.y > 200) return;
