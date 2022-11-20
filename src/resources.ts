@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Global } from "./class/global";
 import tutorial from "./maps/tuto.json";
-import level1 from "./maps/level1-4.json";
+import level1 from "./maps/level1.json";
 import { MapData } from "./utils/map";
 
 const mapArray = [tutorial as MapData[], level1 as MapData[]];

@@ -7,12 +7,14 @@ import type { Sprites } from "../../models";
 import { blocksSpriteSheet, Glitches, Images, mapArray } from "../resources";
 import { ParallaxComponent } from "excalibur";
 import { Pumpkin } from "../class/pumpkin";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 const dico = _dico as Sprites;
 
 export class SideScene extends ex.Scene {
   private player: Player;
   private pumpkin: Pumpkin;
+  public mapWidth = 500;
 
   constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
@@ -24,6 +26,11 @@ export class SideScene extends ex.Scene {
     );
     this.add(this.pumpkin);
     this.add(this.player);
+    this.player.on("move", () => this.playerDeath());
+  }
+
+  public onInitialize(engine: ex.Engine): void {
+    engine.input.keyboard.on("hold", (evt) => this.nextLevel());
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {
@@ -117,6 +124,7 @@ export class SideScene extends ex.Scene {
       ex.Animation.fromSpriteSheet(Glitches["50"], ex.range(0, 3), 70),
       ex.Animation.fromSpriteSheet(Glitches["100"], ex.range(0, 3), 70),
     ];
+    console.log(Global.globalConfig.currentLevel);
     const sprites = getSpritesToDisplay(
       mapArray[Global.globalConfig.currentLevel],
       Views.Side
@@ -178,5 +186,24 @@ export class SideScene extends ex.Scene {
 
       this.add(actor); // Add the actor to the scene
     }
+  }
+
+  public nextLevel() {
+    console.log(this.player.pos.x);
+    console.log(mapArray[Global.globalConfig.currentLevel][1].width);
+    if (
+      this.player.pos.x >=
+      (mapArray[Global.globalConfig.currentLevel][1].width - 10) * 10
+    ) {
+      Global.globalConfig.currentLevel++;
+    }
+    if (Global.globalConfig.currentLevel >= mapArray.length) {
+      Global.globalConfig.currentLevel = 0;
+    }
+  }
+
+  public playerDeath() {
+    console.log("player death");
+    this.player.pos.x = 200;
   }
 }
