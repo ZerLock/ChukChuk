@@ -4,9 +4,11 @@ import {
   UpperPlayerSpriteSheet,
   UpperPlayerSpriteSheetStopped,
 } from "../resources";
+import { Global } from "./global";
 
 export class PlayerUpper extends ex.Actor {
   constructor(xPosition: number, yPosition: number) {
+    const sprite_size = Global.globalConfig.sprite_size;
     super({
       x: xPosition,
       y: yPosition,
@@ -14,6 +16,7 @@ export class PlayerUpper extends ex.Actor {
       height: 64,
       color: ex.Color.Red,
       collisionType: ex.CollisionType.Active,
+      collider: ex.Shape.Box(sprite_size / 2, sprite_size / 5, new ex.Vector(.5, -.5)),
       camera: new ex.Camera(),
     });
   }

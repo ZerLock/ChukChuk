@@ -7,6 +7,10 @@ const Images: { [key: string]: ex.ImageSource } = {
   playerSideIdle: new ex.ImageSource("./chuckidle.png"),
   playerUpper: new ex.ImageSource("./upper.png"),
   blocks: new ex.ImageSource("./blocks.png"),
+  skySide: new ex.ImageSource("./skySide.png"),
+  glitch1: new ex.ImageSource("./glitch1.png"),
+  glitch2: new ex.ImageSource("./glitch2.png"),
+  fullGlitch: new ex.ImageSource("./fullglitch.png"),
 };
 
 const SidePlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
@@ -59,6 +63,36 @@ const UpperPlayerSpriteSheetStopped = ex.SpriteSheet.fromImageSource({
   },
 });
 
+const Glitches = {
+  "10": ex.SpriteSheet.fromImageSource({
+    image: Images.glitch1,
+    grid: {
+      rows: 1,
+      columns: 4,
+      spriteHeight: Global.globalConfig.sprite_size,
+      spriteWidth: Global.globalConfig.sprite_size,
+    },
+  }),
+  "50": ex.SpriteSheet.fromImageSource({
+    image: Images.glitch2,
+    grid: {
+      rows: 1,
+      columns: 4,
+      spriteHeight: Global.globalConfig.sprite_size,
+      spriteWidth: Global.globalConfig.sprite_size,
+    },
+  }),
+  "100": ex.SpriteSheet.fromImageSource({ 
+    image: Images.fullGlitch,
+    grid: {
+      rows: 1,
+      columns: 4,
+      spriteHeight: Global.globalConfig.sprite_size,
+      spriteWidth: Global.globalConfig.sprite_size,
+    },
+  }),
+}
+
 const loader = new ex.Loader();
 const allResources = { ...Images };
 for (const res in allResources) {
@@ -73,4 +107,5 @@ export {
   UpperPlayerSpriteSheet,
   blocksSpriteSheet,
   UpperPlayerSpriteSheetStopped,
+  Glitches,
 };

@@ -61,7 +61,6 @@ const upperViewSprites = (map: MapData[]): SpriteLayers => {
             }
         }
     }
-    console.log({ underPlayer, playerLayer, overPlayer });
     return { underPlayer, playerLayer, overPlayer };
 };
 
@@ -70,4 +69,18 @@ export const getSpritesToDisplay = (map: MapData[], view: Views): SpriteLayers =
         return sideViewSprites(map);
     }
     return upperViewSprites(map);
+}
+
+export const getSideBackground = (map: MapData[]): SpriteData[] => {
+    const layer = Global.globalConfig.current_layer;
+    const refLayer = map[layer].tiles;
+    const result = [];
+    for (let i = layer + 1; i < map.length; i++) {
+        const newLayer = map[i].tiles;
+        const layerContent = newLayer.filter((sprite) => {
+            return refLayer.find((s) => s.x === sprite.x && s.y === sprite.y) === undefined;
+        });
+        result.push(...layerContent);
+    }
+    return result;
 }

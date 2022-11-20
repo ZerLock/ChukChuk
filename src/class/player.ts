@@ -61,7 +61,6 @@ export class Player extends ex.Actor {
         this.graphics.use("runRight");
     }
     if (!this.onGround || this.vel.y != 0) {
-      console.log('post');
       if (this.lastDirection == 'left') {
         this.graphics.use("playerLeftJump");
       } else {
@@ -82,8 +81,6 @@ export class Player extends ex.Actor {
   onPreUpdate(engine: ex.Engine, delta: number) {
     // Keyboard inputs
     this.vel.x = 0;
-
-    console.log('pre');
 
     if (this.lastDirection == 'right') {
       this.graphics.use("playerRightIdle");

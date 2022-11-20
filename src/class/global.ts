@@ -9,6 +9,7 @@ export class Global {
     player_acceleration: 30,
     jump_ratio: 2.4,
     current_layer: 2,
+    glitchness: 0,
     player_pos: {
       x: 0,
       y: 10,
