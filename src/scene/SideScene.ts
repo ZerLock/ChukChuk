@@ -7,7 +7,7 @@ import type { Sprites } from "../../models";
 import { blocksSpriteSheet, Glitches, Images, mapArray } from "../resources";
 import { ParallaxComponent } from "excalibur";
 import { Pumpkin } from "../class/pumpkin";
-import dialogs from '../../resources/dialogues.json';
+import dialogs from "../../resources/dialogues.json";
 
 const dico = _dico as Sprites;
 
@@ -41,7 +41,7 @@ export class SideScene extends ex.Scene {
     ex.Physics.useArcadePhysics();
     ex.Physics.acc = ex.vec(0, Global.globalConfig.gravity);
     this.player.vel.setTo(0, 0);
-    console.log("resetting camera")
+    console.log("resetting camera");
     // Load map
     this.loadMap();
 
@@ -69,7 +69,10 @@ export class SideScene extends ex.Scene {
   public onPreUpdate() {
     const spriteSize = Global.globalConfig.sprite_size;
     dialogs.map((dialog, index) => {
-      if (this.player.pos.x >= dialog.trigger * spriteSize && dialog.hasTriggered === false) {
+      if (
+        this.player.pos.x >= dialog.trigger * spriteSize &&
+        dialog.hasTriggered === false
+      ) {
         if (dialog.level == Global.globalConfig.currentLevel) {
           dialogs[index].hasTriggered = true;
           console.log(dialog);
@@ -88,10 +91,9 @@ export class SideScene extends ex.Scene {
             setTimeout(() => {
               this.pumpkin?.kill();
               Global.globalConfig.hasPumpkin = true;
-              this.player.graphics.use('pumpkinRight');
+              this.player.graphics.use("pumpkinRight");
             }, 2000);
           }
-
           setTimeout(() => {
             actor.kill();
           }, 3000);
@@ -129,7 +131,7 @@ export class SideScene extends ex.Scene {
       actor.graphics.add(darkOverlay);
 
       this.add(actor);
-      console.log('background');
+      console.log("background");
     }
   }
 
@@ -152,7 +154,7 @@ export class SideScene extends ex.Scene {
       skySide.graphics.use("sky");
 
       this.add(skySide);
-      console.log('sky');
+      console.log("sky");
     }
   }
 
@@ -190,8 +192,8 @@ export class SideScene extends ex.Scene {
         glichSeed < Global.globalConfig.glitchness
           ? 2
           : glichSeed < Global.globalConfig.glitchness * 2
-            ? 1
-            : 0;
+          ? 1
+          : 0;
       const actorPayload: any = {
         pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
         width: sprite_size,
@@ -235,14 +237,18 @@ export class SideScene extends ex.Scene {
   }
 
   public nextLevel() {
+    console.log("curent level : ", Global.globalConfig.currentLevel);
+    console.log(mapArray.length);
     if (
       this.player.pos.x >=
-      (mapArray[Global.globalConfig.currentLevel][2].width - 10) * 64
+      (mapArray[Global.globalConfig.currentLevel][2].width - 10) * 10
     ) {
       console.log("next level");
       Global.globalConfig.currentLevel++;
       if (Global.globalConfig.currentLevel >= mapArray.length) {
-        Global.globalConfig.currentLevel = 0;
+        this.engine.goToScene("ending");
+        console.log("end");
+        return;
       }
       this.player.pos.x = 5 * Global.globalConfig.sprite_size;
       this.player.pos.y = 4 * Global.globalConfig.sprite_size;
@@ -258,7 +264,9 @@ export class SideScene extends ex.Scene {
       this.camera.strategy.lockToActorAxis(this.player, ex.Axis.X);
     } else {
       this.camera.clearAllStrategies();
-      this.camera.strategy.limitCameraBounds(new ex.BoundingBox(0, 0, window.innerWidth, window.innerHeight));
+      this.camera.strategy.limitCameraBounds(
+        new ex.BoundingBox(0, 0, window.innerWidth, window.innerHeight)
+      );
     }
   }
 

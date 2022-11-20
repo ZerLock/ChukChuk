@@ -22,6 +22,81 @@ const Images: { [key: string]: ex.ImageSource } = {
   pumpkinJump: new ex.ImageSource("./pumpkinchuckjump.png"),
   pumpkinIdle: new ex.ImageSource("./pumpkinchuckidle.png"),
   pumpkin: new ex.ImageSource("./pumpkin.png"),
+  firework: new ex.ImageSource("./credits/firework.png"),
+  baptiste: new ex.ImageSource("./credits/Baptiste.png"),
+  joshua: new ex.ImageSource("./credits/Joshua.png"),
+  leo: new ex.ImageSource("./credits/Leo.png"),
+  mathias: new ex.ImageSource("./credits/Mathias.png"),
+  paul: new ex.ImageSource("./credits/Paul.png"),
+};
+
+const fireworkSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.firework,
+  grid: {
+    rows: 8,
+    columns: 5,
+    spriteHeight: 192,
+    spriteWidth: 192,
+  },
+});
+
+const baptisteSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.baptiste,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: 75,
+    spriteWidth: 37,
+  },
+});
+
+const joshuaSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.joshua,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: 75,
+    spriteWidth: 37,
+  },
+});
+
+const mathiasSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.mathias,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: 75,
+    spriteWidth: 37,
+  },
+});
+
+const leoSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.leo,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: 75,
+    spriteWidth: 37,
+  },
+});
+
+const paulSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.baptiste,
+  grid: {
+    rows: 1,
+    columns: 4,
+    spriteHeight: 75,
+    spriteWidth: 37,
+  },
+});
+
+const credtisSpriteSheet = {
+  baptiste: baptisteSpriteSheet,
+  joshua: joshuaSpriteSheet,
+  mathias: mathiasSpriteSheet,
+  leo: leoSpriteSheet,
+  paul: paulSpriteSheet,
+  firework: fireworkSpriteSheet,
 };
 
 const PlayerJumpSpriteSheet = ex.SpriteSheet.fromImageSource({
@@ -167,6 +242,7 @@ export {
   SidePlayerSpriteSheet,
   SidePlayerIdle,
   UpperPlayerSpriteSheet,
+  credtisSpriteSheet,
   blocksSpriteSheet,
   pumpkinAmin,
   UpperPlayerSpriteSheetStopped,

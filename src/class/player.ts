@@ -164,11 +164,5 @@ export class Player extends ex.Actor {
         -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
       this.onGround = false;
     }
-
-    // // Death
-    // if (this.pos.y > MainGame.drawHeight) {
-    //   this.kill();
-    //   console.log("mort");
-    // }
   }
 }

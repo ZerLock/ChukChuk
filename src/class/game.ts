@@ -1,8 +1,9 @@
 import * as ex from "excalibur";
 import { UpperScene } from "../scene/UpperScene";
 import { SideScene } from "../scene/SideScene";
+import { EndingScene } from "../scene/EndingScene";
 import { Views } from "../utils/map";
-import { Images } from "resources";
+import { mapArray } from "resources";
 import { Global } from "./global";
 
 class Game extends ex.Engine {
@@ -13,6 +14,7 @@ class Game extends ex.Engine {
   public scene = Views.Side;
   public UpperScene = new UpperScene(this.halfDrawWidth, this.halfDrawHeight);
   public SideScene = new SideScene(this.halfDrawWidth, this.halfDrawHeight);
+  public EndingScene = new EndingScene(this.halfDrawWidth, this.halfDrawHeight);
 
   constructor() {
     super({
@@ -29,14 +31,14 @@ class Game extends ex.Engine {
 
     this.add("upper", this.UpperScene);
     this.add("side", this.SideScene);
+    this.add("ending", this.EndingScene);
   }
 
   onInitialize(engine: ex.Engine) {
-    this.goToScene(this.scene);
-
     engine.input.keyboard.on("press", (evt) =>
       this.handlePressedEvent(engine, evt)
     );
+    this.goToScene(this.scene);
   }
 
   public handlePressedEvent(engine: ex.Engine, evt: ex.Input.KeyEvent) {
