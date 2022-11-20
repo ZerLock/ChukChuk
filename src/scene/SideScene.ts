@@ -181,10 +181,9 @@ export class SideScene extends ex.Scene {
 
       // kill player on aggressive sprite
       if (ref.agressive) {
-        actor.on("precollision", (evt) => {
-          if (evt.other === this.player) {
-            this.player.kill();
-          }
+        actor.on("precollision", () => {
+          this.player.pos.x = 5 * Global.globalConfig.sprite_size;
+          this.player.pos.y = 4 * Global.globalConfig.sprite_size;
         });
       }
 
@@ -195,12 +194,18 @@ export class SideScene extends ex.Scene {
   public nextLevel() {
     if (
       this.player.pos.x >=
-      (mapArray[Global.globalConfig.currentLevel][1].width - 10) * 10
+      (mapArray[Global.globalConfig.currentLevel][2].width - 10) * 64
     ) {
+      console.log("next level");
       Global.globalConfig.currentLevel++;
-    }
-    if (Global.globalConfig.currentLevel >= mapArray.length) {
-      Global.globalConfig.currentLevel = 0;
+      if (Global.globalConfig.currentLevel >= mapArray.length) {
+        Global.globalConfig.currentLevel = 0;
+      }
+      this.player.pos.x = 5 * Global.globalConfig.sprite_size;
+      this.player.pos.y = 4 * Global.globalConfig.sprite_size;
+      Global.globalConfig.current_layer = 2;
+      Global.globalConfig.glitchness /= 2;
+      this.engine.goToScene("side");
     }
   }
 

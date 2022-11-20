@@ -5,7 +5,7 @@ import { Images, SidePlayerIdle, SidePlayerSpriteSheet } from "../resources";
 
 export class Player extends ex.Actor {
   private onGround: boolean = false;
-  private lastDirection: 'right' | 'left' = 'right';
+  private lastDirection: "right" | "left" = "right";
 
   constructor(xPosition: number, yPosition: number) {
     super({
@@ -18,7 +18,7 @@ export class Player extends ex.Actor {
         Global.globalConfig.sprite_size,
         Global.globalConfig.sprite_size,
         ex.Vector.Half,
-        ex.vec(0, -1),
+        ex.vec(0, -1)
       ),
       collisionType: ex.CollisionType.Active,
       vel: ex.vec(0, 0),
@@ -34,37 +34,53 @@ export class Player extends ex.Actor {
     const playerRightJump = Images.playerJump.toSprite();
     const playerLeftJump = Images.playerJump.toSprite();
     playerLeftJump.flipHorizontal = true;
-    const playerRightIdle = ex.Animation.fromSpriteSheet(SidePlayerIdle, [0, 1, 2, 3], 150);
-    const playerLeftIdle = ex.Animation.fromSpriteSheet(SidePlayerIdle, [0, 1, 2, 3], 150);
+    const playerRightIdle = ex.Animation.fromSpriteSheet(
+      SidePlayerIdle,
+      [0, 1, 2, 3],
+      150
+    );
+    const playerLeftIdle = ex.Animation.fromSpriteSheet(
+      SidePlayerIdle,
+      [0, 1, 2, 3],
+      150
+    );
     playerLeftIdle.flipHorizontal = true;
-    const playerRight = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 70);
-    const playerLeft = ex.Animation.fromSpriteSheet(SidePlayerSpriteSheet, ex.range(0, 9), 70);
+    const playerRight = ex.Animation.fromSpriteSheet(
+      SidePlayerSpriteSheet,
+      ex.range(0, 9),
+      70
+    );
+    const playerLeft = ex.Animation.fromSpriteSheet(
+      SidePlayerSpriteSheet,
+      ex.range(0, 9),
+      70
+    );
     playerLeft.flipHorizontal = true;
 
     // Add animations
-    this.graphics.add('playerRightJump', playerRightJump);
-    this.graphics.add('playerLeftJump', playerLeftJump);
-    this.graphics.add('playerRightIdle', playerRightIdle);
-    this.graphics.add('playerLeftIdle', playerLeftIdle);
-    this.graphics.add('runRight', playerRight);
-    this.graphics.add('runLeft', playerLeft);
+    this.graphics.add("playerRightJump", playerRightJump);
+    this.graphics.add("playerLeftJump", playerLeftJump);
+    this.graphics.add("playerRightIdle", playerRightIdle);
+    this.graphics.add("playerLeftIdle", playerLeftIdle);
+    this.graphics.add("runRight", playerRight);
+    this.graphics.add("runLeft", playerLeft);
     this.graphics.use(playerRight);
 
-    this.on('postcollision', (evt) => this.onPostCollision(evt));
+    this.on("postcollision", (evt) => this.onPostCollision(evt));
   }
 
   onPostUpdate() {
     // Change player animations
     if (this.vel.x < 0) {
-        this.graphics.use("runLeft");
+      this.graphics.use("runLeft");
     } else if (this.vel.x > 0) {
-        this.graphics.use("runRight");
+      this.graphics.use("runRight");
     }
     if (!this.onGround || this.vel.y != 0) {
-      if (this.lastDirection == 'left') {
+      if (this.lastDirection == "left") {
         this.graphics.use("playerLeftJump");
       } else {
-          this.graphics.use("playerRightJump");
+        this.graphics.use("playerRightJump");
       }
     }
   }
@@ -82,22 +98,33 @@ export class Player extends ex.Actor {
     // Keyboard inputs
     this.vel.x = 0;
 
-    if (this.lastDirection == 'right') {
+    if (this.lastDirection == "right") {
       this.graphics.use("playerRightIdle");
     } else {
       this.graphics.use("playerLeftIdle");
     }
 
-    if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+    if (
+      engine.input.keyboard.isHeld(ex.Input.Keys.Right) ||
+      engine.input.keyboard.isHeld(ex.Input.Keys.D)
+    ) {
       this.vel.x = Global.globalConfig.player_speed;
-      this.lastDirection = 'right';
+      this.lastDirection = "right";
     }
-    if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+    if (
+      engine.input.keyboard.isHeld(ex.Input.Keys.Left) ||
+      engine.input.keyboard.isHeld(ex.Input.Keys.A)
+    ) {
       this.vel.x = -Global.globalConfig.player_speed;
-      this.lastDirection = 'left';
+      this.lastDirection = "left";
     }
-    if (engine.input.keyboard.isHeld(ex.Input.Keys.Space) && this.vel.y === 0 && this.onGround) {
-      this.vel.y = -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
+    if (
+      engine.input.keyboard.isHeld(ex.Input.Keys.Space) &&
+      this.vel.y === 0 &&
+      this.onGround
+    ) {
+      this.vel.y =
+        -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
       this.onGround = false;
     }
 
