@@ -101,10 +101,10 @@ export class Player extends ex.Actor {
       this.onGround = false;
     }
 
-    // Death
-    if (this.pos.y > MainGame.drawHeight) {
-      this.kill();
-      console.log("mort");
-    }
+    // // Death
+    // if (this.pos.y > MainGame.drawHeight) {
+    //   this.kill();
+    //   console.log("mort");
+    // }
   }
 }
