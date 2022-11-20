@@ -26,16 +26,12 @@ export class SideScene extends ex.Scene {
     );
     this.add(this.pumpkin);
     this.add(this.player);
-    this.player.on("move", () => this.playerDeath());
   }
 
   onPostUpdate(_engine: ex.Engine, _delta: number): void {
     this.playerDeath();
     this.nextLevel();
-  }
-  public onInitialize(engine: ex.Engine): void {
-    engine.input.keyboard.on("hold", (evt) => this.nextLevel());
-    engine.input.keyboard.on("hold", (evt) => this.playerDeath());
+    this.cameraType();
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {
@@ -43,7 +39,7 @@ export class SideScene extends ex.Scene {
     ex.Physics.useArcadePhysics();
     ex.Physics.acc = ex.vec(0, Global.globalConfig.gravity);
     this.player.vel.setTo(0, 0);
-
+    console.log("resetting camera")
     // Load map
     this.loadMap();
 
@@ -110,7 +106,7 @@ export class SideScene extends ex.Scene {
         height: window.innerHeight,
       });
 
-      const skySideSprite = Images.skySide.toSprite();
+      const skySideSprite = Images.skySideGame.toSprite();
       skySideSprite.width = width;
       skySideSprite.height = window.innerHeight;
 
@@ -156,8 +152,8 @@ export class SideScene extends ex.Scene {
         glichSeed < Global.globalConfig.glitchness
           ? 2
           : glichSeed < Global.globalConfig.glitchness * 2
-          ? 1
-          : 0;
+            ? 1
+            : 0;
       const actorPayload: any = {
         pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
         width: sprite_size,
@@ -189,6 +185,15 @@ export class SideScene extends ex.Scene {
 
       this.add(actor); // Add the actor to the scene
     }
+
+    // invisible wall on x = 0
+    const wall = new ex.Actor({
+      pos: ex.vec(0, window.innerHeight),
+      width: 5,
+      height: 1000,
+      collisionType: ex.CollisionType.Fixed,
+    });
+    this.add(wall);
   }
 
   public nextLevel() {
@@ -209,10 +214,22 @@ export class SideScene extends ex.Scene {
     }
   }
 
+  private cameraType() {
+    if (this.player.pos.x >= window.innerWidth / 2) {
+      this.camera.clearAllStrategies();
+      this.camera.strategy.lockToActorAxis(this.player, ex.Axis.X);
+    } else {
+      this.camera.clearAllStrategies();
+      this.camera.strategy.limitCameraBounds(new ex.BoundingBox(0, 0, window.innerWidth, window.innerHeight));
+    }
+  }
+
   public playerDeath() {
     if (this.player.pos.y >= window.innerHeight) {
-      this.player.pos.x = 5 * Global.globalConfig.sprite_size;
+      this.player.pos.x = 7 * Global.globalConfig.sprite_size;
       this.player.pos.y = 4 * Global.globalConfig.sprite_size;
+      Global.globalConfig.current_layer = 2;
+      this.engine.goToScene("side");
     }
   }
 }

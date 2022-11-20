@@ -4,10 +4,12 @@ import {
   UpperPlayerSpriteSheetStopped,
   blocksSpriteSheet,
   mapArray,
+  Images,
 } from "../resources";
 import { getSpritesToDisplay, SpriteData, Views } from "../utils/map";
 import { getSprite } from "../utils/sprite";
 import { Global } from "../class/global";
+import { ParallaxComponent } from "excalibur";
 
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;
@@ -32,13 +34,14 @@ export class UpperScene extends ex.Scene {
     this.player = new PlayerUpper(
       player_pos.x,
       (4 - Global.globalConfig.current_layer) *
-        Global.globalConfig.sprite_size +
-        this.deltaHeight
+      Global.globalConfig.sprite_size +
+      this.deltaHeight
     );
     const mapper = getSpritesToDisplay(
       mapArray[Global.globalConfig.currentLevel],
       Views.Upper
     );
+    this.loadSky();
     this.printUpperMap(mapper["underPlayer"], "underPlayer");
     this.add(this.player);
     this.printUpperMap(mapper["playerLayer"], "playerLayer");
@@ -132,7 +135,31 @@ export class UpperScene extends ex.Scene {
     }
   }
 
+  private loadSky() {
+    for (let i = -1; i < 3; i++) {
+      const width = (window.innerHeight * 16) / 9;
+
+      const skySide = new ex.Actor({
+        pos: ex.vec(i * width, 0),
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      const skySideSprite = Images.skyUpper.toSprite();
+      skySideSprite.width = width;
+      skySideSprite.height = window.innerHeight;
+
+      skySide.addComponent(new ParallaxComponent(ex.vec(0.05, 0)));
+
+      skySide.graphics.add("sky", skySideSprite);
+      skySide.graphics.use("sky");
+
+      this.add(skySide);
+    }
+  }
+
   public printUpperMap(toMap: SpriteData[], layer: string) {
+
     let maxX = 0;
     toMap.forEach((element) => {
       if (element.x > maxX) {

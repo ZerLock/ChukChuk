@@ -13,6 +13,8 @@ const Images: { [key: string]: ex.ImageSource } = {
   playerUpper: new ex.ImageSource("./upper.png"),
   blocks: new ex.ImageSource("./blocks.png"),
   skySide: new ex.ImageSource("./skySide.png"),
+  skySideGame: new ex.ImageSource("./skySideGame.png"),
+  skyUpper: new ex.ImageSource("./skyUpper.png"),
   glitch1: new ex.ImageSource("./glitch1.png"),
   glitch2: new ex.ImageSource("./glitch2.png"),
   fullGlitch: new ex.ImageSource("./fullglitch.png"),
