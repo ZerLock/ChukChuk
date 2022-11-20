@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Global } from "../class/global";
 import { MainGame } from "./game";
-import { Images, SidePlayerIdle, SidePlayerSpriteSheet } from "../resources";
+import { Images, PlayerJumpSpriteSheet, SidePlayerIdle, SidePlayerSpriteSheet, SidePumpchukSpriteSheet, SidePumpkinIdle, SidePumpkinJump } from "../resources";
 
 export class Player extends ex.Actor {
   private onGround: boolean = false;
@@ -31,19 +31,8 @@ export class Player extends ex.Actor {
     MainGame.currentScene.camera.strategy.lockToActorAxis(this, ex.Axis.X);
 
     // Sprites & Animations & Graphics
-    const playerRightJump = Images.playerJump.toSprite();
-    const playerLeftJump = Images.playerJump.toSprite();
-    playerLeftJump.flipHorizontal = true;
-    const playerRightIdle = ex.Animation.fromSpriteSheet(
-      SidePlayerIdle,
-      [0, 1, 2, 3],
-      150
-    );
-    const playerLeftIdle = ex.Animation.fromSpriteSheet(
-      SidePlayerIdle,
-      [0, 1, 2, 3],
-      150
-    );
+    const playerRightIdle = ex.Animation.fromSpriteSheet(SidePlayerIdle, [0, 1, 2, 3], 150);
+    const playerLeftIdle = ex.Animation.fromSpriteSheet(SidePlayerIdle, [0, 1, 2, 3], 150);
     playerLeftIdle.flipHorizontal = true;
     const playerRight = ex.Animation.fromSpriteSheet(
       SidePlayerSpriteSheet,
@@ -56,15 +45,53 @@ export class Player extends ex.Actor {
       70
     );
     playerLeft.flipHorizontal = true;
+    const pumpkinRunRight = ex.Animation.fromSpriteSheet(SidePumpchukSpriteSheet, ex.range(0, 8), 70);
+    const pumpkinRunLeft = ex.Animation.fromSpriteSheet(SidePumpchukSpriteSheet, ex.range(0, 8), 70);
+    pumpkinRunLeft.flipHorizontal = true;
+    const pumpkinIdleRight = ex.Animation.fromSpriteSheet(SidePumpkinIdle, ex.range(0, 3), 150);
+    const pumpkinIdleLeft = ex.Animation.fromSpriteSheet(SidePumpkinIdle, ex.range(0, 3), 150);
+    pumpkinIdleLeft.flipHorizontal = true;
+
+    // Jump
+    const pumpkinJumpHighRight = SidePumpkinJump.sprites[0];
+    const pumpkinJumpLowRight = SidePumpkinJump.sprites[1];
+    const pumpkinJumpHighLeft = SidePumpkinJump.sprites[0].clone();
+    const pumpkinJumpLowLeft = SidePumpkinJump.sprites[1].clone();
+    pumpkinJumpHighLeft.flipHorizontal = true;
+    pumpkinJumpLowLeft.flipHorizontal = true;
+
+    const playerJumpHighRight = PlayerJumpSpriteSheet.sprites[0];
+    const playerJumpLowRight = PlayerJumpSpriteSheet.sprites[1];
+    const playerJumpHighLeft = PlayerJumpSpriteSheet.sprites[0].clone();
+    const playerJumpLowLeft = PlayerJumpSpriteSheet.sprites[1].clone();
+    playerJumpHighLeft.flipHorizontal = true;
+    playerJumpLowLeft.flipHorizontal = true;
 
     // Add animations
-    this.graphics.add("playerRightJump", playerRightJump);
-    this.graphics.add("playerLeftJump", playerLeftJump);
-    this.graphics.add("playerRightIdle", playerRightIdle);
-    this.graphics.add("playerLeftIdle", playerLeftIdle);
-    this.graphics.add("runRight", playerRight);
-    this.graphics.add("runLeft", playerLeft);
-    this.graphics.use(playerRight);
+    this.graphics.add('playerRightIdle', playerRightIdle);
+    this.graphics.add('playerLeftIdle', playerLeftIdle);
+    this.graphics.add('runRight', playerRight);
+    this.graphics.add('runLeft', playerLeft);
+    this.graphics.add('pumpkinRight', pumpkinRunRight);
+    this.graphics.add('pumpkinLeft', pumpkinRunLeft);
+    this.graphics.add('pumpkinIdleRight', pumpkinIdleRight);
+    this.graphics.add('pumpkinIdleLeft', pumpkinIdleLeft);
+
+    this.graphics.add('pumpkinJumpHighRight', pumpkinJumpHighRight);
+    this.graphics.add('pumpkinJumpLowRight', pumpkinJumpLowRight);
+    this.graphics.add('pumpkinJumpHighLeft', pumpkinJumpHighLeft);
+    this.graphics.add('pumpkinJumpLowLeft', pumpkinJumpLowLeft);
+
+    this.graphics.add('playerJumpHighRight', playerJumpHighRight);
+    this.graphics.add('playerJumpLowRight', playerJumpLowRight);
+    this.graphics.add('playerJumpHighLeft', playerJumpHighLeft);
+    this.graphics.add('playerJumpLowLeft', playerJumpLowLeft);
+
+    if (Global.globalConfig.hasPumpkin) {
+      this.graphics.use(pumpkinRunRight);
+    } else {
+      this.graphics.use(playerRight);
+    }
 
     this.on("postcollision", (evt) => this.onPostCollision(evt));
   }
@@ -72,15 +99,25 @@ export class Player extends ex.Actor {
   onPostUpdate() {
     // Change player animations
     if (this.vel.x < 0) {
-      this.graphics.use("runLeft");
+          this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinLeft" : "runLeft");
     } else if (this.vel.x > 0) {
-      this.graphics.use("runRight");
+        this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinRight" : "runRight");
     }
+
+    // Jump
     if (!this.onGround || this.vel.y != 0) {
-      if (this.lastDirection == "left") {
-        this.graphics.use("playerLeftJump");
+      if (this.lastDirection == 'left') {
+        if (this.vel.y < 0) {
+          this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpHighLeft" : "playerJumpHighLeft");
+        } else {
+          this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpLowLeft" : "playerJumpLowLeft")
+        }
       } else {
-        this.graphics.use("playerRightJump");
+        if (this.vel.y < 0) {
+          this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpHighRight" : "playerJumpHighRight");
+        } else {
+          this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpLowRight" : "playerJumpLowRight")
+        }
       }
     }
   }
@@ -98,10 +135,10 @@ export class Player extends ex.Actor {
     // Keyboard inputs
     this.vel.x = 0;
 
-    if (this.lastDirection == "right") {
-      this.graphics.use("playerRightIdle");
+    if (this.lastDirection == 'right') {
+      this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinIdleRight" : "playerRightIdle");
     } else {
-      this.graphics.use("playerLeftIdle");
+      this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinIdleLeft" : "playerLeftIdle");
     }
 
     if (

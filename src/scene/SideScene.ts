@@ -7,24 +7,26 @@ import type { Sprites } from "../../models";
 import { blocksSpriteSheet, Glitches, Images, mapArray } from "../resources";
 import { ParallaxComponent } from "excalibur";
 import { Pumpkin } from "../class/pumpkin";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
+import dialogs from '../../resources/dialogues.json';
 
 const dico = _dico as Sprites;
 
 export class SideScene extends ex.Scene {
   private player: Player;
-  private pumpkin: Pumpkin;
+  private pumpkin: Pumpkin | null = null;
   public mapWidth = 500;
 
   constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
     this.player = new Player(10, 10);
 
-    this.pumpkin = new Pumpkin(
-      Global.globalConfig.pumpkin_pos.x * Global.globalConfig.sprite_size,
-      Global.globalConfig.pumpkin_pos.y * Global.globalConfig.sprite_size + 10
-    );
-    this.add(this.pumpkin);
+    if (Global.globalConfig.currentLevel == 0) {
+      this.pumpkin = new Pumpkin(
+        Global.globalConfig.pumpkin_pos.x * Global.globalConfig.sprite_size,
+        Global.globalConfig.pumpkin_pos.y * Global.globalConfig.sprite_size + 10
+      );
+      this.add(this.pumpkin);
+    }
     this.add(this.player);
   }
 
@@ -64,6 +66,40 @@ export class SideScene extends ex.Scene {
     this.clear();
   }
 
+  public onPreUpdate() {
+    const spriteSize = Global.globalConfig.sprite_size;
+    dialogs.map((dialog, index) => {
+      if (this.player.pos.x >= dialog.trigger * spriteSize && dialog.hasTriggered === false) {
+        if (dialog.level == Global.globalConfig.currentLevel) {
+          dialogs[index].hasTriggered = true;
+          console.log(dialog);
+          const actor = new ex.Actor({
+            pos: ex.vec(this.player.pos.x, this.player.pos.y - 40),
+            scale: ex.vec(2, 2),
+          });
+          const text = new ex.Text({
+            text: `${dialog.name}:\n${dialog.text}`,
+            color: ex.Color.Black,
+          });
+          actor.graphics.use(text);
+          this.add(actor);
+
+          if (dialog.order === 0) {
+            setTimeout(() => {
+              this.pumpkin?.kill();
+              Global.globalConfig.hasPumpkin = true;
+              this.player.graphics.use('pumpkinRight');
+            }, 2000);
+          }
+
+          setTimeout(() => {
+            actor.kill();
+          }, 3000);
+        }
+      }
+    });
+  }
+
   private loadBackground() {
     const background = getSideBackground(
       mapArray[Global.globalConfig.currentLevel]
@@ -93,6 +129,7 @@ export class SideScene extends ex.Scene {
       actor.graphics.add(darkOverlay);
 
       this.add(actor);
+      console.log('background');
     }
   }
 
@@ -115,6 +152,7 @@ export class SideScene extends ex.Scene {
       skySide.graphics.use("sky");
 
       this.add(skySide);
+      console.log('sky');
     }
   }
 

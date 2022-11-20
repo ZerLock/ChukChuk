@@ -18,6 +18,9 @@ const Images: { [key: string]: ex.ImageSource } = {
   glitch1: new ex.ImageSource("./glitch1.png"),
   glitch2: new ex.ImageSource("./glitch2.png"),
   fullGlitch: new ex.ImageSource("./fullglitch.png"),
+  pumpchuk: new ex.ImageSource("./pumpkinchuck.png"),
+  pumpkinJump: new ex.ImageSource("./pumpkinchuckjump.png"),
+  pumpkinIdle: new ex.ImageSource("./pumpkinchuckidle.png"),
   pumpkin: new ex.ImageSource("./pumpkin.png"),
 };
 
@@ -26,6 +29,36 @@ const PlayerJumpSpriteSheet = ex.SpriteSheet.fromImageSource({
   grid: {
     rows: 1,
     columns: 2,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+});
+
+const SidePumpchukSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.pumpchuk,
+  grid: {
+    rows: 1,
+    columns: 8,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+});
+
+const SidePumpkinJump = ex.SpriteSheet.fromImageSource({
+  image: Images.pumpkinJump,
+  grid: {
+    rows: 1,
+    columns: 2,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+});
+
+const SidePumpkinIdle = ex.SpriteSheet.fromImageSource({
+  image: Images.pumpkinIdle,
+  grid: {
+    rows: 1,
+    columns: 4,
     spriteHeight: Global.globalConfig.sprite_size,
     spriteWidth: Global.globalConfig.sprite_size,
   },
@@ -137,6 +170,9 @@ export {
   blocksSpriteSheet,
   pumpkinAmin,
   UpperPlayerSpriteSheetStopped,
+  SidePumpchukSpriteSheet,
+  SidePumpkinIdle,
+  SidePumpkinJump,
   Glitches,
   mapArray,
 };
