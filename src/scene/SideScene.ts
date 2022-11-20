@@ -29,8 +29,13 @@ export class SideScene extends ex.Scene {
     this.player.on("move", () => this.playerDeath());
   }
 
+  onPostUpdate(_engine: ex.Engine, _delta: number): void {
+    this.playerDeath();
+    this.nextLevel();
+  }
   public onInitialize(engine: ex.Engine): void {
     engine.input.keyboard.on("hold", (evt) => this.nextLevel());
+    engine.input.keyboard.on("hold", (evt) => this.playerDeath());
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {
@@ -124,7 +129,6 @@ export class SideScene extends ex.Scene {
       ex.Animation.fromSpriteSheet(Glitches["50"], ex.range(0, 3), 70),
       ex.Animation.fromSpriteSheet(Glitches["100"], ex.range(0, 3), 70),
     ];
-    console.log(Global.globalConfig.currentLevel);
     const sprites = getSpritesToDisplay(
       mapArray[Global.globalConfig.currentLevel],
       Views.Side
@@ -189,8 +193,6 @@ export class SideScene extends ex.Scene {
   }
 
   public nextLevel() {
-    console.log(this.player.pos.x);
-    console.log(mapArray[Global.globalConfig.currentLevel][1].width);
     if (
       this.player.pos.x >=
       (mapArray[Global.globalConfig.currentLevel][1].width - 10) * 10
@@ -203,7 +205,9 @@ export class SideScene extends ex.Scene {
   }
 
   public playerDeath() {
-    console.log("player death");
-    this.player.pos.x = 200;
+    if (this.player.pos.y >= window.innerHeight) {
+      this.player.pos.x = 5 * Global.globalConfig.sprite_size;
+      this.player.pos.y = 4 * Global.globalConfig.sprite_size;
+    }
   }
 }
