@@ -241,7 +241,7 @@ export class SideScene extends ex.Scene {
     console.log(mapArray.length);
     if (
       this.player.pos.x >=
-      (mapArray[Global.globalConfig.currentLevel][2].width - 10) * 10
+      (mapArray[Global.globalConfig.currentLevel][2].width - 10) * 64
     ) {
       console.log("next level");
       Global.globalConfig.currentLevel++;

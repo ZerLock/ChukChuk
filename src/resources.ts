@@ -81,7 +81,7 @@ const leoSpriteSheet = ex.SpriteSheet.fromImageSource({
 });
 
 const paulSpriteSheet = ex.SpriteSheet.fromImageSource({
-  image: Images.baptiste,
+  image: Images.paul,
   grid: {
     rows: 1,
     columns: 4,
