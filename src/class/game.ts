@@ -2,6 +2,8 @@ import * as ex from "excalibur";
 import { UpperScene } from "../scene/UpperScene";
 import { SideScene } from "../scene/SideScene";
 import { Views } from "../utils/map";
+import { Images } from "resources";
+import { Global } from "./global";
 
 class Game extends ex.Engine {
     public static drawWidth = window.innerWidth;
@@ -24,12 +26,16 @@ class Game extends ex.Engine {
             antialiasing: false, // For pixel art
             maxFps: 60,
         });
+
+
+
         this.add("upper", this.UpperScene);
         this.add("side", this.SideScene);
     }
 
     onInitialize(engine: ex.Engine) {
         this.goToScene(this.scene);
+
         engine.input.keyboard.on("press", (evt) =>
             this.handlePressedEvent(engine, evt)
         );
@@ -39,6 +45,7 @@ class Game extends ex.Engine {
         if (evt.key == ex.Input.Keys.Enter) {
             // fade out
             engine.currentScene.camera.zoomOverTime(3, 1000);
+            Global.globalConfig.glitchness += 0.1;
             setTimeout(() => {
                 this.goToScene(this.scene);
                 engine.currentScene.camera.zoom = 3;

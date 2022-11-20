@@ -46,7 +46,7 @@ export class UpperScene extends ex.Scene {
       4,
       3 - Math.floor((this.player.pos.y - this.deltaHeight - 25) / sprite_size)
     );
-    Global.globalConfig.player_pos.x = Math.floor(
+    Global.globalConfig.player_pos.x = Math.round(
       this.player.pos.x / sprite_size
     );
     this.clear();
@@ -152,7 +152,7 @@ export class UpperScene extends ex.Scene {
       block.graphics.use(spriteToDraw);
       if (layer !== "underPlayer") {
         const darkOverlay = spriteToDraw.clone();
-        darkOverlay.tint = new ex.Color(layer === "playerLayer" ? 255 : 0, 0, 0, (15 - (element.altitude ?? 0)) / 15);
+        darkOverlay.tint = new ex.Color(0, 0, 0, (15 - (element.altitude ?? 0)) / 15);
         block.graphics.add(darkOverlay);
       }
       // kill player on aggressive sprite

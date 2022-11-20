@@ -8,6 +8,7 @@ export interface globalConfig {
     player_acceleration: number;
     jump_ratio: number;
     current_layer: number;
+    glitchness: number;
     player_pos: Position;
     hasPumpkin: boolean;
     pumpkin_pos: Position;
