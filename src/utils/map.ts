@@ -61,7 +61,6 @@ const upperViewSprites = (map: MapData[]): SpriteLayers => {
             }
         }
     }
-    console.log({ underPlayer, playerLayer, overPlayer });
     return { underPlayer, playerLayer, overPlayer };
 };
 

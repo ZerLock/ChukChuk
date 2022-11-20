@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import { getSpritesToDisplay, Views } from "../utils/map";
 import { Global } from "../class/global";
 import { Player } from "../class/player";
-import map from '../maps/level1-3.json';
+import map from '../maps/level1-4.json';
 import _dico from '../../resources/script/dictionnaire.json';
 import type { Sprites } from '../../models';
 import { blocksSpriteSheet } from "../resources";
@@ -36,10 +36,9 @@ export class SideScene extends ex.Scene {
 
         // Load player
         const player_pos = Global.globalConfig.player_pos;
-        console.log(player_pos);
+        player_pos
         player_pos.x *= Global.globalConfig.sprite_size;
         player_pos.y = (14 - player_pos.y) * Global.globalConfig.sprite_size;
-        console.log(player_pos);
         if (!this.player.isKilled()) {
             this.player.kill();
         }
@@ -59,7 +58,6 @@ export class SideScene extends ex.Scene {
 
         // Load pumpkin
         if (!Global.globalConfig.hasPumpkin) {
-            console.log('yo');
             this.pumpkin = new Pumpkin(
                 Global.globalConfig.pumpkin_pos.x * sprite_size,
                 Global.globalConfig.pumpkin_pos.y * sprite_size + 10,
@@ -78,6 +76,8 @@ export class SideScene extends ex.Scene {
                 width: sprite_size,
                 height: sprite_size,
             }
+            if (block.id == '392')
+                console.log(block.id, ref);
             if (ref.collision) {
                 actorPayload.collisionType = ex.CollisionType.Fixed;
             }

@@ -1,11 +1,10 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
 import { UpperPlayerSpriteSheetStopped, blocksSpriteSheet } from "../resources";
-import map from "../maps/level1-3.json";
+import map from "../maps/level1-4.json";
 import { getSpritesToDisplay, SpriteData, Views } from "../utils/map";
 import { getSprite } from "../utils/sprite";
 import { Global } from "../class/global";
-import { SpriteSheet } from "excalibur";
 
 export class UpperScene extends ex.Scene {
   private player: ex.Actor;

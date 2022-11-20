@@ -61,7 +61,6 @@ export class Player extends ex.Actor {
         this.graphics.use("runRight");
     }
     if (!this.onGround || this.vel.y != 0) {
-      console.log('post');
       if (this.lastDirection == 'left') {
         this.graphics.use("playerLeftJump");
       } else {
@@ -83,8 +82,6 @@ export class Player extends ex.Actor {
     // Keyboard inputs
     this.vel.x = 0;
 
-    console.log('pre');
-
     if (this.lastDirection == 'right') {
       this.graphics.use("playerRightIdle");
     } else {
@@ -104,6 +101,10 @@ export class Player extends ex.Actor {
       this.onGround = false;
     }
 
-    console.log(this.pos.x / Global.globalConfig.sprite_size);
+    // Death
+    if (MainGame. this.pos.y > MainGame.drawHeight) {
+      this.kill();
+      console.log("mort");
+    }
   }
 }

@@ -10,6 +10,16 @@ const Images: { [key: string]: ex.ImageSource } = {
   pumpkin: new ex.ImageSource("./pumpkin.png"),
 };
 
+const PlayerJumpSpriteSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.playerJump,
+  grid: {
+    rows: 1,
+    columns: 2,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+});
+
 const SidePlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
   image: Images.player,
   grid: {
@@ -79,6 +89,7 @@ for (const res in allResources) {
 export {
   Images,
   loader,
+  PlayerJumpSpriteSheet,
   SidePlayerSpriteSheet,
   SidePlayerIdle,
   UpperPlayerSpriteSheet,
