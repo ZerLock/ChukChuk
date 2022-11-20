@@ -2,10 +2,9 @@ import * as ex from "excalibur";
 import { getSideBackground, getSpritesToDisplay, Views } from "../utils/map";
 import { Global } from "../class/global";
 import { Player } from "../class/player";
-import map from '../maps/level1-4.json';
-import _dico from '../../resources/script/dictionnaire.json';
-import type { Sprites } from '../../models';
-import { blocksSpriteSheet, Glitches, Images } from "../resources";
+import _dico from "../../resources/script/dictionnaire.json";
+import type { Sprites } from "../../models";
+import { blocksSpriteSheet, Glitches, Images, mapArray } from "../resources";
 import { ParallaxComponent } from "excalibur";
 import { Pumpkin } from "../class/pumpkin";
 
@@ -21,7 +20,7 @@ export class SideScene extends ex.Scene {
 
     this.pumpkin = new Pumpkin(
       Global.globalConfig.pumpkin_pos.x * Global.globalConfig.sprite_size,
-      Global.globalConfig.pumpkin_pos.y * Global.globalConfig.sprite_size + 10,
+      Global.globalConfig.pumpkin_pos.y * Global.globalConfig.sprite_size + 10
     );
     this.add(this.pumpkin);
     this.add(this.player);
@@ -42,22 +41,25 @@ export class SideScene extends ex.Scene {
     player_pos.y = (14 - player_pos.y) * Global.globalConfig.sprite_size;
     if (!this.player.isKilled()) {
       this.player.kill();
-
     }
     this.player = new Player(player_pos.x, player_pos.y);
     this.add(this.player);
   }
 
-
   public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
     const sprite_size = Global.globalConfig.sprite_size;
-    Global.globalConfig.player_pos.x = Math.round((this.player.pos.x + 10) / sprite_size);
-    Global.globalConfig.player_pos.y = 14 - Math.floor(this.player.pos.y / sprite_size);
+    Global.globalConfig.player_pos.x = Math.round(
+      (this.player.pos.x + 10) / sprite_size
+    );
+    Global.globalConfig.player_pos.y =
+      14 - Math.floor(this.player.pos.y / sprite_size);
     this.clear();
   }
 
   private loadBackground() {
-    const background = getSideBackground(map);
+    const background = getSideBackground(
+      mapArray[Global.globalConfig.currentLevel]
+    );
     const sprite_size = Global.globalConfig.sprite_size;
 
     for (const block of background) {
@@ -68,7 +70,7 @@ export class SideScene extends ex.Scene {
         width: sprite_size,
         height: sprite_size,
         collisionType: ex.CollisionType.PreventCollision,
-      }
+      };
       const actor = new ex.Actor(actorPayload);
 
       const sprite = blocksSpriteSheet.sprites[ref.y * 32 + ref.x].clone();
@@ -88,7 +90,7 @@ export class SideScene extends ex.Scene {
 
   private loadSky() {
     for (let i = -1; i < 3; i++) {
-      const width = window.innerHeight * 16 / 9;
+      const width = (window.innerHeight * 16) / 9;
 
       const skySide = new ex.Actor({
         pos: ex.vec(i * width, 0),
@@ -96,10 +98,9 @@ export class SideScene extends ex.Scene {
         height: window.innerHeight,
       });
 
-      const skySideSprite = Images.skySide.toSprite()
+      const skySideSprite = Images.skySide.toSprite();
       skySideSprite.width = width;
       skySideSprite.height = window.innerHeight;
-
 
       skySide.addComponent(new ParallaxComponent(ex.vec(0.05, 0)));
       skySide.graphics.add("sky", skySideSprite);
@@ -114,9 +115,12 @@ export class SideScene extends ex.Scene {
     const glitches = [
       ex.Animation.fromSpriteSheet(Glitches["10"], ex.range(0, 3), 70),
       ex.Animation.fromSpriteSheet(Glitches["50"], ex.range(0, 3), 70),
-      ex.Animation.fromSpriteSheet(Glitches["100"], ex.range(0, 3), 70)
+      ex.Animation.fromSpriteSheet(Glitches["100"], ex.range(0, 3), 70),
     ];
-    const sprites = getSpritesToDisplay(map, Views.Side);
+    const sprites = getSpritesToDisplay(
+      mapArray[Global.globalConfig.currentLevel],
+      Views.Side
+    );
     const sprite_size = Global.globalConfig.sprite_size;
     this.loadSky();
     this.loadBackground();
@@ -125,7 +129,7 @@ export class SideScene extends ex.Scene {
     if (!Global.globalConfig.hasPumpkin) {
       this.pumpkin = new Pumpkin(
         Global.globalConfig.pumpkin_pos.x * sprite_size,
-        Global.globalConfig.pumpkin_pos.y * sprite_size + 10,
+        Global.globalConfig.pumpkin_pos.y * sprite_size + 10
       );
       this.add(this.pumpkin);
     }
@@ -135,13 +139,18 @@ export class SideScene extends ex.Scene {
     for (const block of sprites.playerLayer) {
       const ref = dico[block.id]; // Get block reference by ID
       const isGlitched = Math.random() * 5 < Global.globalConfig.glitchness;
-      const glichSeed = Math.random() * 5
-      const glitchLevel = glichSeed < Global.globalConfig.glitchness ? 2 : glichSeed < Global.globalConfig.glitchness * 2 ? 1 : 0;
+      const glichSeed = Math.random() * 5;
+      const glitchLevel =
+        glichSeed < Global.globalConfig.glitchness
+          ? 2
+          : glichSeed < Global.globalConfig.glitchness * 2
+          ? 1
+          : 0;
       const actorPayload: any = {
         pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
         width: sprite_size,
         height: sprite_size,
-      }
+      };
       if (ref.collision) {
         actorPayload.collisionType = ex.CollisionType.Fixed;
       }

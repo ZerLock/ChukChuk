@@ -1,7 +1,10 @@
 import * as ex from "excalibur";
 import { PlayerUpper } from "../class/playerUpper";
-import { UpperPlayerSpriteSheetStopped, blocksSpriteSheet } from "../resources";
-import map from "../maps/level1-4.json";
+import {
+  UpperPlayerSpriteSheetStopped,
+  blocksSpriteSheet,
+  mapArray,
+} from "../resources";
 import { getSpritesToDisplay, SpriteData, Views } from "../utils/map";
 import { getSprite } from "../utils/sprite";
 import { Global } from "../class/global";
@@ -29,10 +32,13 @@ export class UpperScene extends ex.Scene {
     this.player = new PlayerUpper(
       player_pos.x,
       (4 - Global.globalConfig.current_layer) *
-      Global.globalConfig.sprite_size +
-      this.deltaHeight
+        Global.globalConfig.sprite_size +
+        this.deltaHeight
     );
-    const mapper = getSpritesToDisplay(map, Views.Upper);
+    const mapper = getSpritesToDisplay(
+      mapArray[Global.globalConfig.currentLevel],
+      Views.Upper
+    );
     this.printUpperMap(mapper["underPlayer"], "underPlayer");
     this.add(this.player);
     this.printUpperMap(mapper["playerLayer"], "playerLayer");
@@ -141,7 +147,8 @@ export class UpperScene extends ex.Scene {
         width: Global.globalConfig.sprite_size,
         height: Global.globalConfig.sprite_size,
 
-        collisionType: layer === "playerLayer"
+        collisionType:
+          layer === "playerLayer"
             ? ex.CollisionType.Fixed
             : ex.CollisionType.PreventCollision,
       });
@@ -152,7 +159,12 @@ export class UpperScene extends ex.Scene {
       block.graphics.use(spriteToDraw);
       if (layer !== "underPlayer") {
         const darkOverlay = spriteToDraw.clone();
-        darkOverlay.tint = new ex.Color(0, 0, 0, (15 - (element.altitude ?? 0)) / 15);
+        darkOverlay.tint = new ex.Color(
+          0,
+          0,
+          0,
+          (15 - (element.altitude ?? 0)) / 15
+        );
         block.graphics.add(darkOverlay);
       }
       // kill player on aggressive sprite
