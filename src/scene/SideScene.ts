@@ -123,7 +123,6 @@ export class SideScene extends ex.Scene {
 
     // Load pumpkin
     if (!Global.globalConfig.hasPumpkin) {
-      console.log('yo');
       this.pumpkin = new Pumpkin(
         Global.globalConfig.pumpkin_pos.x * sprite_size,
         Global.globalConfig.pumpkin_pos.y * sprite_size + 10,
@@ -138,28 +137,16 @@ export class SideScene extends ex.Scene {
       const isGlitched = Math.random() * 5 < Global.globalConfig.glitchness;
       const glichSeed = Math.random() * 5
       const glitchLevel = glichSeed < Global.globalConfig.glitchness ? 2 : glichSeed < Global.globalConfig.glitchness * 2 ? 1 : 0;
-
-<<<<<<< HEAD
-        // Load player
-        const player_pos = Global.globalConfig.player_pos;
-        player_pos
-        player_pos.x *= Global.globalConfig.sprite_size;
-        player_pos.y = (14 - player_pos.y) * Global.globalConfig.sprite_size;
-        if (!this.player.isKilled()) {
-=======
       const actorPayload: any = {
         pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
         width: sprite_size,
         height: sprite_size,
-        collider: ex.Shape.Box(sprite_size / 2, sprite_size),
       }
       if (ref.collision) {
         actorPayload.collisionType = ex.CollisionType.Fixed;
       }
-
       // Create new block actor
       const actor = new ex.Actor(actorPayload);
-
       // Get sprite from spritesheet
       const sprite = blocksSpriteSheet.sprites[ref.y * 32 + ref.x];
       sprite.height = Global.globalConfig.sprite_size; // Set size for responsive
@@ -175,7 +162,6 @@ export class SideScene extends ex.Scene {
       if (ref.agressive) {
         actor.on("precollision", (evt) => {
           if (evt.other === this.player) {
->>>>>>> e30fa82277cebd056c25415cfa68fdc386ad49ad
             this.player.kill();
           }
         });
@@ -183,68 +169,5 @@ export class SideScene extends ex.Scene {
 
       this.add(actor); // Add the actor to the scene
     }
-<<<<<<< HEAD
-
-    public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
-        const sprite_size = Global.globalConfig.sprite_size;
-        Global.globalConfig.player_pos.x = Math.floor(this.player.pos.x / sprite_size);
-        Global.globalConfig.player_pos.y = 14 - Math.floor(this.player.pos.y / sprite_size);
-        this.clear();
-    }
-
-    private loadMap() {
-        const sprite_size = Global.globalConfig.sprite_size;
-
-        // Load pumpkin
-        if (!Global.globalConfig.hasPumpkin) {
-            this.pumpkin = new Pumpkin(
-                Global.globalConfig.pumpkin_pos.x * sprite_size,
-                Global.globalConfig.pumpkin_pos.y * sprite_size + 10,
-            );
-            this.add(this.pumpkin);
-        }
-
-        // Get sprites to display
-        const sprites = getSpritesToDisplay(map, Views.Side);
-
-        for (const block of sprites.playerLayer) {
-            const ref = dico[block.id]; // Get block reference by ID
-
-            const actorPayload: any = {
-                pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
-                width: sprite_size,
-                height: sprite_size,
-            }
-            if (block.id == '392')
-                console.log(block.id, ref);
-            if (ref.collision) {
-                actorPayload.collisionType = ex.CollisionType.Fixed;
-            }
-
-            // Create new block actor
-            const actor = new ex.Actor(actorPayload);
-
-            // Get sprite from spritesheet
-            const sprite = blocksSpriteSheet.sprites[ref.y * 32 + ref.x];
-            sprite.height = Global.globalConfig.sprite_size; // Set size for responsive
-            sprite.width = Global.globalConfig.sprite_size; // Set size for responsive
-
-            actor.graphics.use(sprite); // Add sprite on the block actor
-
-                  // kill player on aggressive sprite
-            if (ref.agressive) {
-                actor.on("precollision", (evt) => {
-                    if (evt.other === this.player) {
-                        this.player.kill();
-                    }
-                });
-            }
-
-            this.add(actor); // Add the actor to the scene
-        }
-    }
-}
-=======
   }
 }
->>>>>>> e30fa82277cebd056c25415cfa68fdc386ad49ad

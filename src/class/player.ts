@@ -102,7 +102,7 @@ export class Player extends ex.Actor {
     }
 
     // Death
-    if (MainGame. this.pos.y > MainGame.drawHeight) {
+    if (this.pos.y > MainGame.drawHeight) {
       this.kill();
       console.log("mort");
     }
