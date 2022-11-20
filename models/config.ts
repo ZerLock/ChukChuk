@@ -10,4 +10,6 @@ export interface globalConfig {
     current_layer: number;
     glitchness: number;
     player_pos: Position;
+    hasPumpkin: boolean;
+    pumpkin_pos: Position;
 }

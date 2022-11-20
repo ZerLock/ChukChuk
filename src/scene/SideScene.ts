@@ -7,15 +7,23 @@ import _dico from '../../resources/script/dictionnaire.json';
 import type { Sprites } from '../../models';
 import { blocksSpriteSheet, Glitches, Images } from "../resources";
 import { ParallaxComponent } from "excalibur";
+import { Pumpkin } from "../class/pumpkin";
 
 const dico = _dico as Sprites;
 
 export class SideScene extends ex.Scene {
   private player: Player;
+  private pumpkin: Pumpkin;
 
   constructor(halfDrawWidth: number, halfDrawHeigh: number) {
     super();
     this.player = new Player(10, 10);
+
+    this.pumpkin = new Pumpkin(
+      Global.globalConfig.pumpkin_pos.x * Global.globalConfig.sprite_size,
+      Global.globalConfig.pumpkin_pos.y * Global.globalConfig.sprite_size + 10,
+    );
+    this.add(this.pumpkin);
     this.add(this.player);
   }
 
@@ -34,10 +42,12 @@ export class SideScene extends ex.Scene {
     player_pos.y = (14 - player_pos.y) * Global.globalConfig.sprite_size;
     if (!this.player.isKilled()) {
       this.player.kill();
+
     }
     this.player = new Player(player_pos.x, player_pos.y);
     this.add(this.player);
   }
+
 
   public onDeactivate(_context: ex.SceneActivationContext<undefined>): void {
     const sprite_size = Global.globalConfig.sprite_size;
@@ -111,6 +121,18 @@ export class SideScene extends ex.Scene {
     this.loadSky();
     this.loadBackground();
 
+    // Load pumpkin
+    if (!Global.globalConfig.hasPumpkin) {
+      console.log('yo');
+      this.pumpkin = new Pumpkin(
+        Global.globalConfig.pumpkin_pos.x * sprite_size,
+        Global.globalConfig.pumpkin_pos.y * sprite_size + 10,
+      );
+      this.add(this.pumpkin);
+    }
+
+    // Get sprites to display
+
     for (const block of sprites.playerLayer) {
       const ref = dico[block.id]; // Get block reference by ID
       const isGlitched = Math.random() * 5 < Global.globalConfig.glitchness;
@@ -139,6 +161,15 @@ export class SideScene extends ex.Scene {
       if (isGlitched) {
         const glitch = glitches[glitchLevel].clone();
         actor.graphics.add(glitch);
+      }
+
+      // kill player on aggressive sprite
+      if (ref.agressive) {
+        actor.on("precollision", (evt) => {
+          if (evt.other === this.player) {
+            this.player.kill();
+          }
+        });
       }
 
       this.add(actor); // Add the actor to the scene
