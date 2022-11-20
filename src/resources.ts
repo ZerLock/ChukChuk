@@ -1,5 +1,10 @@
 import * as ex from "excalibur";
 import { Global } from "./class/global";
+import tutorial from "./maps/tuto.json";
+import level1 from "./maps/level1-4.json";
+import { MapData } from "./utils/map";
+
+const mapArray = [tutorial as MapData[], level1 as MapData[]];
 
 const Images: { [key: string]: ex.ImageSource } = {
   player: new ex.ImageSource("./chuck.png"),
@@ -42,7 +47,7 @@ const SidePlayerIdle = ex.SpriteSheet.fromImageSource({
     spriteHeight: Global.globalConfig.sprite_size,
     spriteWidth: Global.globalConfig.sprite_size,
   },
-})
+});
 
 const blocksSpriteSheet = ex.SpriteSheet.fromImageSource({
   image: Images.blocks,
@@ -61,7 +66,7 @@ const pumpkinAmin = ex.SpriteSheet.fromImageSource({
     columns: 4,
     spriteWidth: Global.globalConfig.sprite_size,
     spriteHeight: Global.globalConfig.sprite_size,
-  }
+  },
 });
 
 const UpperPlayerSpriteSheet = ex.SpriteSheet.fromImageSource({
@@ -103,7 +108,7 @@ const Glitches = {
       spriteWidth: Global.globalConfig.sprite_size,
     },
   }),
-  "100": ex.SpriteSheet.fromImageSource({ 
+  "100": ex.SpriteSheet.fromImageSource({
     image: Images.fullGlitch,
     grid: {
       rows: 1,
@@ -112,7 +117,7 @@ const Glitches = {
       spriteWidth: Global.globalConfig.sprite_size,
     },
   }),
-}
+};
 
 const loader = new ex.Loader();
 const allResources = { ...Images };
@@ -131,4 +136,5 @@ export {
   pumpkinAmin,
   UpperPlayerSpriteSheetStopped,
   Glitches,
+  mapArray,
 };
