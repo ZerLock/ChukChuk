@@ -71,7 +71,7 @@ export class Player extends ex.Actor {
 
   onPostCollision(evt: ex.PostCollisionEvent) {
     // Set jump possibility
-    if (evt.side === ex.Side.Bottom) {
+    if (evt.side === ex.Side.Bottom && this.vel.y === 0) {
       this.onGround = true;
     } else {
       this.onGround = false;
@@ -96,7 +96,7 @@ export class Player extends ex.Actor {
       this.vel.x = -Global.globalConfig.player_speed;
       this.lastDirection = 'left';
     }
-    if (engine.input.keyboard.isHeld(ex.Input.Keys.Space) && this.onGround) {
+    if (engine.input.keyboard.isHeld(ex.Input.Keys.Space) && this.vel.y === 0 && this.onGround) {
       this.vel.y = -Global.globalConfig.gravity / Global.globalConfig.jump_ratio;
       this.onGround = false;
     }
