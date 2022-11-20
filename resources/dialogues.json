@@ -21,7 +21,7 @@
         "id": 3,
         "order": 2,
         "name": "Mr Citrouille",
-        "text": "Good job ! Now continue forward.",
+        "text": "Good job ! Now go straight.",
         "trigger": 68,
         "hasTriggered": false,
         "level": 0
@@ -30,7 +30,7 @@
         "id": 4,
         "order": 3,
         "name": "Mr Citrouille",
-        "text": "Oh no step-sis you are stuck ! try to avoid the tree. Click on \"Enter\"",
+        "text": "Oh no you are stuck ! Try to avoid the tree. Press \"Enter\"",
         "trigger": 112,
         "hasTriggered": false,
         "level": 0
@@ -39,7 +39,7 @@
         "id": 5,
         "order": 4,
         "name": "Mr Citrouille",
-        "text": "GG !! You completed the tutorial ! Now go explore this mysterios world !",
+        "text": "GG !! You completed the tutorial ! Now go explore this mysterious world !",
         "trigger": 130,
         "hasTriggered": false,
         "level": 0

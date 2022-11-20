@@ -2,9 +2,10 @@ import * as ex from "excalibur";
 import { Global } from "./class/global";
 import tutorial from "./maps/tuto.json";
 import level1 from "./maps/level1.json";
+import level2 from "./maps/level2.json";
 import { MapData } from "./utils/map";
 
-const mapArray = [tutorial as MapData[], level1 as MapData[]];
+const mapArray = [tutorial as MapData[], level2 as MapData[]];
 
 const Images: { [key: string]: ex.ImageSource } = {
   player: new ex.ImageSource("./chuck.png"),
@@ -14,6 +15,7 @@ const Images: { [key: string]: ex.ImageSource } = {
   blocks: new ex.ImageSource("./blocks.png"),
   skySide: new ex.ImageSource("./skySide.png"),
   skySideGame: new ex.ImageSource("./skySideGame.png"),
+  skySideGameGlitch: new ex.ImageSource("./glitchsidesky.png"),
   skyUpper: new ex.ImageSource("./skyUpper.png"),
   glitch1: new ex.ImageSource("./glitch1.png"),
   glitch2: new ex.ImageSource("./glitch2.png"),
@@ -22,6 +24,7 @@ const Images: { [key: string]: ex.ImageSource } = {
   pumpkinJump: new ex.ImageSource("./pumpkinchuckjump.png"),
   pumpkinIdle: new ex.ImageSource("./pumpkinchuckidle.png"),
   pumpkin: new ex.ImageSource("./pumpkin.png"),
+  pumpkinUpper: new ex.ImageSource("./pumpkintopview.png"),
   firework: new ex.ImageSource("./credits/firework.png"),
   baptiste: new ex.ImageSource("./credits/Baptiste.png"),
   joshua: new ex.ImageSource("./credits/Joshua.png"),
@@ -90,6 +93,16 @@ const paulSpriteSheet = ex.SpriteSheet.fromImageSource({
   },
 });
 
+const skySideGameGlitchSheet = ex.SpriteSheet.fromImageSource({
+  image: Images.skySideGameGlitch,
+  grid: {
+    rows: 1,
+    columns: 9,
+    spriteHeight: 1080,
+    spriteWidth: 1920,
+  },
+});
+
 const credtisSpriteSheet = {
   baptiste: baptisteSpriteSheet,
   joshua: joshuaSpriteSheet,
@@ -97,6 +110,14 @@ const credtisSpriteSheet = {
   leo: leoSpriteSheet,
   paul: paulSpriteSheet,
   firework: fireworkSpriteSheet,
+};
+
+const Sounds: { [key: string]: ex.Sound } = {
+  ambient: new ex.Sound("./sounds/ambient.mp3"),
+  jump: new ex.Sound("./sounds/jump.mp3"),
+  walking: new ex.Sound("./sounds/walking.mp3"),
+  glitch: new ex.Sound("./sounds/glitch.mp3"),
+  danse: new ex.Sound("./sounds/danse.mp3"),
 };
 
 const PlayerJumpSpriteSheet = ex.SpriteSheet.fromImageSource({
@@ -199,6 +220,26 @@ const UpperPlayerSpriteSheetStopped = ex.SpriteSheet.fromImageSource({
   },
 });
 
+const UpperPlayerSpriteSheetPumpkined = ex.SpriteSheet.fromImageSource({
+  image: Images.pumpkinUpper,
+  grid: {
+    rows: 4,
+    columns: 4,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+});
+
+const UpperPlayerSpriteSheetStoppedPumpkined = ex.SpriteSheet.fromImageSource({
+  image: Images.pumpkinUpper,
+  grid: {
+    rows: 4,
+    columns: 1,
+    spriteHeight: Global.globalConfig.sprite_size,
+    spriteWidth: Global.globalConfig.sprite_size,
+  },
+});
+
 const Glitches = {
   "10": ex.SpriteSheet.fromImageSource({
     image: Images.glitch1,
@@ -230,12 +271,13 @@ const Glitches = {
 };
 
 const loader = new ex.Loader();
-const allResources = { ...Images };
+const allResources = { ...Images, ...Sounds };
 for (const res in allResources) {
   loader.addResource(allResources[res]);
 }
 
 export {
+  Sounds,
   Images,
   loader,
   PlayerJumpSpriteSheet,
@@ -246,7 +288,10 @@ export {
   blocksSpriteSheet,
   pumpkinAmin,
   UpperPlayerSpriteSheetStopped,
+  UpperPlayerSpriteSheetPumpkined,
+  UpperPlayerSpriteSheetStoppedPumpkined,
   SidePumpchukSpriteSheet,
+  skySideGameGlitchSheet,
   SidePumpkinIdle,
   SidePumpkinJump,
   Glitches,

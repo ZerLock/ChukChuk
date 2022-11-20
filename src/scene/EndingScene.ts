@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { Images, credtisSpriteSheet } from "../resources";
+import { Images, credtisSpriteSheet, Sounds } from "../resources";
 
 const font = [
   "Impact",
@@ -106,6 +106,16 @@ export class EndingScene extends ex.Scene {
       window.innerHeight / 2 - 250
     );
   }
+
+  onPostUpdate(_engine: ex.Engine, _delta: number): void {
+    Sounds.ambient.stop();
+    Sounds.glitch.stop();
+    Sounds.jump.stop();
+    if (!Sounds.danse.isPlaying()) {
+      Sounds.danse.play();
+    }
+  }
+
   private loadSky() {
     for (let i = -1; i < 3; i++) {
       const width = (window.innerHeight * 16) / 9;

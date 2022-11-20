@@ -4,7 +4,7 @@ import { Global } from "../class/global";
 import { Player } from "../class/player";
 import _dico from "../../resources/script/dictionnaire.json";
 import type { Sprites } from "../../models";
-import { blocksSpriteSheet, Glitches, Images, mapArray } from "../resources";
+import { blocksSpriteSheet, Glitches, Images, mapArray, skySideGameGlitchSheet, Sounds } from "../resources";
 import { ParallaxComponent } from "excalibur";
 import { Pumpkin } from "../class/pumpkin";
 import dialogs from "../../resources/dialogues.json";
@@ -30,18 +30,31 @@ export class SideScene extends ex.Scene {
     this.add(this.player);
   }
 
+
+  private manageSounds() {
+    Sounds.ambient.volume = 0.2;
+    Sounds.glitch.volume = Global.globalConfig.glitchness / 10;
+    if (!Sounds.ambient.isPlaying()) {
+      Sounds.ambient.play();
+    }
+    if (!Sounds.glitch.isPlaying()) {
+      Sounds.glitch.play();
+    }
+  }
+
   onPostUpdate(_engine: ex.Engine, _delta: number): void {
+    this.manageSounds();
     this.playerDeath();
     this.nextLevel();
     this.cameraType();
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {
+
     // Set physics
     ex.Physics.useArcadePhysics();
     ex.Physics.acc = ex.vec(0, Global.globalConfig.gravity);
     this.player.vel.setTo(0, 0);
-    console.log("resetting camera");
     // Load map
     this.loadMap();
 
@@ -75,12 +88,10 @@ export class SideScene extends ex.Scene {
       ) {
         if (dialog.level == Global.globalConfig.currentLevel) {
           dialogs[index].hasTriggered = true;
-          console.log(dialog);
           const text = new ex.Text({
             text: `${dialog.name}:\n${dialog.text}`,
             color: ex.Color.Black,
           });
-          console.log("text", text.width, text.height);
           const actor = new ex.Actor({
             pos: ex.vec(this.player.pos.x, this.player.pos.y - 40),
             scale: ex.vec(2, 2),
@@ -141,11 +152,11 @@ export class SideScene extends ex.Scene {
       actor.graphics.add(darkOverlay);
 
       this.add(actor);
-      console.log("background");
     }
   }
 
   private loadSky() {
+    const glitchsidesky = ex.Animation.fromSpriteSheet(skySideGameGlitchSheet, ex.range(0, 8), 70);
     for (let i = -1; i < 3; i++) {
       const width = (window.innerHeight * 16) / 9;
 
@@ -153,18 +164,20 @@ export class SideScene extends ex.Scene {
         pos: ex.vec(i * width, 0),
         width: window.innerWidth,
         height: window.innerHeight,
+        collisionType: ex.CollisionType.PreventCollision,
       });
 
-      const skySideSprite = Images.skySideGame.toSprite();
-      skySideSprite.width = width;
-      skySideSprite.height = window.innerHeight;
+      const skySideSprite = Global.globalConfig.glitchness > 0.5 ? glitchsidesky : Images.skySideGame.toSprite();
+      skySideSprite.scale = ex.vec(
+        width / 1920 * (Global.globalConfig.glitchness > 0.5 ? 2 : 1),
+        window.innerHeight / 1080 * (Global.globalConfig.glitchness > 0.5 ? 2 : 1)
+      );
 
       skySide.addComponent(new ParallaxComponent(ex.vec(0.05, 0)));
       skySide.graphics.add("sky", skySideSprite);
       skySide.graphics.use("sky");
 
       this.add(skySide);
-      console.log("sky");
     }
   }
 
@@ -202,8 +215,8 @@ export class SideScene extends ex.Scene {
         glichSeed < Global.globalConfig.glitchness
           ? 2
           : glichSeed < Global.globalConfig.glitchness * 2
-          ? 1
-          : 0;
+            ? 1
+            : 0;
       const actorPayload: any = {
         pos: ex.vec(block.x * sprite_size, block.y * sprite_size),
         width: sprite_size,
@@ -227,6 +240,7 @@ export class SideScene extends ex.Scene {
 
       // kill player on aggressive sprite
       if (ref.agressive) {
+        console.log(ref)
         actor.on("precollision", () => {
           this.player.pos.x = 5 * Global.globalConfig.sprite_size;
           this.player.pos.y = 4 * Global.globalConfig.sprite_size;
@@ -247,17 +261,13 @@ export class SideScene extends ex.Scene {
   }
 
   public nextLevel() {
-    console.log("curent level : ", Global.globalConfig.currentLevel);
-    console.log(mapArray.length);
     if (
       this.player.pos.x >=
       (mapArray[Global.globalConfig.currentLevel][2].width - 10) * 64
     ) {
-      console.log("next level");
       Global.globalConfig.currentLevel++;
       if (Global.globalConfig.currentLevel >= mapArray.length) {
         this.engine.goToScene("ending");
-        console.log("end");
         return;
       }
       this.player.pos.x = 5 * Global.globalConfig.sprite_size;

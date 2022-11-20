@@ -1,7 +1,8 @@
 import * as ex from "excalibur";
 import { Global } from "../class/global";
 import { MainGame } from "./game";
-import { Images, PlayerJumpSpriteSheet, SidePlayerIdle, SidePlayerSpriteSheet, SidePumpchukSpriteSheet, SidePumpkinIdle, SidePumpkinJump } from "../resources";
+import { Images, Sounds, PlayerJumpSpriteSheet, SidePlayerIdle, SidePlayerSpriteSheet, SidePumpchukSpriteSheet, SidePumpkinIdle, SidePumpkinJump } from "../resources";
+import { Sound } from "excalibur";
 
 export class Player extends ex.Actor {
   private onGround: boolean = false;
@@ -94,14 +95,22 @@ export class Player extends ex.Actor {
     }
 
     this.on("postcollision", (evt) => this.onPostCollision(evt));
+    Sounds.walking.volume = 0.05;
+    Sounds.jump.volume = 0.2;
   }
+
+  private canPlayJump = true;
 
   onPostUpdate() {
     // Change player animations
+    let walking = false;
+    let jumping = false;
     if (this.vel.x < 0) {
-          this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinLeft" : "runLeft");
+      this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinLeft" : "runLeft");
+      walking = true;
     } else if (this.vel.x > 0) {
-        this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinRight" : "runRight");
+      this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinRight" : "runRight");
+      walking = true;
     }
 
     // Jump
@@ -111,15 +120,36 @@ export class Player extends ex.Actor {
           this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpHighLeft" : "playerJumpHighLeft");
         } else {
           this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpLowLeft" : "playerJumpLowLeft")
+          this.canPlayJump = true;
         }
+        jumping = true;
+
       } else {
         if (this.vel.y < 0) {
           this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpHighRight" : "playerJumpHighRight");
         } else {
           this.graphics.use(Global.globalConfig.hasPumpkin ? "pumpkinJumpLowRight" : "playerJumpLowRight")
+          this.canPlayJump = true;
         }
+        jumping = true;
       }
     }
+
+    if (jumping) {
+      Sounds.walking.stop();
+      if (!Sounds.jump.isPlaying() && this.canPlayJump) {
+        Sounds.jump.play();
+        this.canPlayJump = false;
+      }
+    } else if (walking) {
+      Sounds.jump.stop();
+      if (!Sounds.walking.isPlaying())
+        Sounds.walking.play();
+    } else {
+      Sounds.walking.stop();
+      Sounds.jump.stop();
+    }
+
   }
 
   onPostCollision(evt: ex.PostCollisionEvent) {

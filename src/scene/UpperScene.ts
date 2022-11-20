@@ -5,6 +5,7 @@ import {
   blocksSpriteSheet,
   mapArray,
   Images,
+  UpperPlayerSpriteSheetStoppedPumpkined,
 } from "../resources";
 import { getSpritesToDisplay, SpriteData, Views } from "../utils/map";
 import { getSprite } from "../utils/sprite";
@@ -116,22 +117,24 @@ export class UpperScene extends ex.Scene {
   }
 
   public handleStopMovement(engine: ex.Engine, evt: ex.Input.KeyEvent) {
+    const spriteSheet = Global.globalConfig.hasPumpkin ? UpperPlayerSpriteSheetStoppedPumpkined : UpperPlayerSpriteSheetStopped;
+
     if (this.lastDirection === "down") {
       this.player.graphics.hide();
-      this.player.graphics.show(UpperPlayerSpriteSheetStopped.sprites[0]);
+      this.player.graphics.show(spriteSheet.sprites[0]);
     } else if (this.lastDirection === "left") {
       this.player.graphics.hide();
 
-      this.player.graphics.show(UpperPlayerSpriteSheetStopped.sprites[1]);
+      this.player.graphics.show(spriteSheet.sprites[1]);
     } else if (this.lastDirection === "right") {
       this.player.graphics.hide();
 
-      this.player.graphics.show(UpperPlayerSpriteSheetStopped.sprites[2]);
+      this.player.graphics.show(spriteSheet.sprites[2]);
     } else if (this.lastDirection === "up") {
       this.player.graphics.hide();
-      this.player.graphics.show(UpperPlayerSpriteSheetStopped.sprites[3]);
+      this.player.graphics.show(spriteSheet.sprites[3]);
     } else {
-      this.player.graphics.show(UpperPlayerSpriteSheetStopped.sprites[0]);
+      this.player.graphics.show(spriteSheet.sprites[0]);
     }
   }
 

@@ -2,7 +2,9 @@ import * as ex from "excalibur";
 import { MainGame } from "./game";
 import {
   UpperPlayerSpriteSheet,
+  UpperPlayerSpriteSheetPumpkined,
   UpperPlayerSpriteSheetStopped,
+  UpperPlayerSpriteSheetStoppedPumpkined,
 } from "../resources";
 import { Global } from "./global";
 
@@ -22,23 +24,24 @@ export class PlayerUpper extends ex.Actor {
   }
   onInitialize(engine: ex.Engine) {
     MainGame.currentScene.camera.strategy.lockToActorAxis(this, ex.Axis.X);
+    const hasPumpkin = Global.globalConfig.hasPumpkin
     const playerMoveAnimDown = ex.Animation.fromSpriteSheet(
-      UpperPlayerSpriteSheet,
+      hasPumpkin ? UpperPlayerSpriteSheetPumpkined : UpperPlayerSpriteSheet,
       [0, 1, 2, 3],
       100
     );
     const playerMoveAnimLeft = ex.Animation.fromSpriteSheet(
-      UpperPlayerSpriteSheet,
+      hasPumpkin ? UpperPlayerSpriteSheetPumpkined : UpperPlayerSpriteSheet,
       [4, 5, 6, 7],
       100
     );
     const playerMoveAnimRight = ex.Animation.fromSpriteSheet(
-      UpperPlayerSpriteSheet,
+      hasPumpkin ? UpperPlayerSpriteSheetPumpkined :  UpperPlayerSpriteSheet,
       [8, 9, 10, 11],
       100
     );
     const playerMoveAnimUp = ex.Animation.fromSpriteSheet(
-      UpperPlayerSpriteSheet,
+      hasPumpkin ? UpperPlayerSpriteSheetPumpkined : UpperPlayerSpriteSheet,
       [12, 13, 14, 15],
       100
     );
@@ -47,6 +50,6 @@ export class PlayerUpper extends ex.Actor {
     this.graphics.add("moveUp", playerMoveAnimUp);
     this.graphics.add("moveLeft", playerMoveAnimLeft);
     this.graphics.add("moveRight", playerMoveAnimRight);
-    this.graphics.use(UpperPlayerSpriteSheetStopped.sprites[0]);
+    this.graphics.use(hasPumpkin ? UpperPlayerSpriteSheetStoppedPumpkined.sprites[0] : UpperPlayerSpriteSheetStopped.sprites[0]);
   }
 }
