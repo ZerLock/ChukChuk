@@ -76,15 +76,24 @@ export class SideScene extends ex.Scene {
         if (dialog.level == Global.globalConfig.currentLevel) {
           dialogs[index].hasTriggered = true;
           console.log(dialog);
-          const actor = new ex.Actor({
-            pos: ex.vec(this.player.pos.x, this.player.pos.y - 40),
-            scale: ex.vec(2, 2),
-          });
           const text = new ex.Text({
             text: `${dialog.name}:\n${dialog.text}`,
             color: ex.Color.Black,
           });
+          console.log("text", text.width, text.height);
+          const actor = new ex.Actor({
+            pos: ex.vec(this.player.pos.x, this.player.pos.y - 40),
+            scale: ex.vec(2, 2),
+          });
           actor.graphics.use(text);
+          const background = new ex.Actor({
+            pos: ex.vec(actor.pos.x, actor.pos.y - 15),
+            width: Math.ceil(text.width),
+            height: Math.ceil(text.height),
+            scale: ex.vec(2, 2),
+            color: ex.Color.White,
+          });
+          this.add(background);
           this.add(actor);
 
           if (dialog.order === 0) {
@@ -96,6 +105,7 @@ export class SideScene extends ex.Scene {
           }
           setTimeout(() => {
             actor.kill();
+            background.kill();
           }, 3000);
         }
       }
